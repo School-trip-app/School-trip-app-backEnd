@@ -47,16 +47,17 @@ commentModel.belongsTo(UserModel, { forignKey: 'userId', targetKey: 'id' });
 memoriesModel.hasMany(commentModel, { forignKey: 'memoryId', primaryKey: 'id' });
 commentModel.belongsTo(memoriesModel, { forignKey: 'memoryId', targetKey: 'id' });
 
-sequelize.authenticate().then(() => {
-	console.log('Database connected to postgres');
-}).catch((err) => {
-	console.log(err);
-});
+sequelize.authenticate()
+	.then(() => {
+		console.log('Database connected to postgres');
+	}).catch((err) => {
+		console.log(err);
+	});
 
 
 module.exports = {
 	db: sequelize,
-	UserModel: UserModel,
+	UserModel,
 	commentModel,
 	memoriesModel,
 	packageModel,

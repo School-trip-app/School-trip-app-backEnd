@@ -3,7 +3,7 @@ const router = require('express').Router();
 
 const bcrypt = require('bcrypt');
 const base64 = require('base-64');
-const { UserModel } = require('../modules/index');
+const { UserModel } = require('../models');
 const { checkUser } = require('../middlewares/userCheck');
 
 

@@ -2,7 +2,7 @@
 
 const express = require('express');
 const router = express.Router();
-const { memoriesModel, commentModel, UserModel} = require('../models');
+const { memoriesModel, commentModel, UserModel } = require('../models');
 
 router.post('/memory', addMemory);
 router.get('/memory', getMemorys);
@@ -10,9 +10,9 @@ router.put('/memory/:id', updateMemory);
 router.delete('/memory/:id', deleteMemory);
 
 function addMemory(req, res, next) {
+  // body:{"userId":"integer","imageUrl":"string","discription":"string","likes":"integer","dislikes":"integer"}
   try {
-// body:{"userId":"integer","imageUrl":"string","discription":"string","likes":"integer","dislikes":"integer"}
-  memoriesModel.create(req.body) 
+    memoriesModel.create(req.body)
       .then(resolve => { res.status(201).send('done') })
       .catch(reject => { res.status(306).send(reject) });
   } catch (err) {
@@ -22,7 +22,7 @@ function addMemory(req, res, next) {
 
 function getMemorys(req, res, next) {
   try {
-    memoriesModel.findAll({include: [commentModel, UserModel]} )
+    memoriesModel.findAll({ include: [commentModel, UserModel] })
       .then((resolve) => {
         res.status(200).send(resolve);
       })

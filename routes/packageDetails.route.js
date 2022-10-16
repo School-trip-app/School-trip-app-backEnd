@@ -2,7 +2,7 @@
 
 const express = require('express');
 const router = express.Router();
-const { packageDetailsModel, packageModel} = require('../models');
+const { packageDetailsModel, packageModel } = require('../models');
 
 router.post('/packageDetails/:packageId', addPackageDetails);
 router.get('/packageDetails/:packageId', getPackageDetails);
@@ -10,22 +10,22 @@ router.put('/packageDetails/:id', updatePackageDetails);
 router.delete('/packageDetails/:id', deletePackageDetails);
 
 function addPackageDetails(req, res, next) {
-  try {
   /*
-{"packageId":"INTEGER","locationURL":"STRING","tripDate":"DATEONLY","numberOfPeople":"INTEGER",
-"startingTime":"STRING","endingTime":"STRING","price":"INTEGER","meals":"STRING"}
-*/
-const packageDetailsData = {
-  packageId: req.params.packageId,
-  locationURL: req.body.locationURL,
-  tripDate: req.body.tripDate,
-  numberOfPeople:req.body.numberOfPeople,
-  startingTime:req.body.startingTime,
-  endingTime:req.body.endingTime,
-  price:req.body.price,
-  meals:req.body.meals,
-}
-    packageDetailsModel.create(packageDetailsData) 
+  {"packageId":"INTEGER","locationURL":"STRING","tripDate":"DATEONLY","numberOfPeople":"INTEGER",
+  "startingTime":"STRING","endingTime":"STRING","price":"INTEGER","meals":"STRING"}
+  */
+  try {
+    const packageDetailsData = {
+      packageId: req.params.packageId,
+      locationURL: req.body.locationURL,
+      tripDate: req.body.tripDate,
+      numberOfPeople: req.body.numberOfPeople,
+      startingTime: req.body.startingTime,
+      endingTime: req.body.endingTime,
+      price: req.body.price,
+      meals: req.body.meals,
+    }
+    packageDetailsModel.create(packageDetailsData)
       .then(resolve => { res.status(201).send('done') })
       .catch(reject => { res.status(306).send(reject) });
   } catch (err) {
@@ -35,7 +35,7 @@ const packageDetailsData = {
 
 function getPackageDetails(req, res, next) {
   try {
-    packageDetailsModel.findAll({ where: { packageId: req.params.packageId } },{ include: [packageModel] })
+    packageDetailsModel.findAll({ where: { packageId: req.params.packageId } , include: [packageModel] })
       .then((resolve) => {
         res.status(200).send(resolve);
       })

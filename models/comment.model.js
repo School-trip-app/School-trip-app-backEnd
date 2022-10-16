@@ -5,8 +5,7 @@ function createCommentTable(sequelize, DataTypes) {
     sequelize.define("comment", {
       userId: { type: DataTypes.INTEGER, allowNull: false },
       memoryId: { type: DataTypes.INTEGER, allowNull: false },
-      comment: { type: DataTypes.STRING, allowNull: false },
-      commentDate : { type: DataTypes.DATE, defaultValue: DataTypes.NOW }
+      comment: { type: DataTypes.STRING, allowNull: false }     
     })
   )
 }

@@ -8,8 +8,7 @@ function createPackageTable(sequelize, DataTypes) {
 			packageDiscription: { type: DataTypes.STRING, allowNull: false },
 			rate: { type: DataTypes.STRING },
 			ratesNumber: { type: DataTypes.INTEGER, defaultValue: 0 },
-			weatherURL: { type: DataTypes.STRING, allowNull: false },
-			date: { type: DataTypes.DATEONLY, allowNull: false },
+			weatherURL: { type: DataTypes.STRING, allowNull: false }
 		})
 	)
 }

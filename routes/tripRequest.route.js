@@ -2,7 +2,7 @@
 
 const express = require('express');
 const router = express.Router();
-const { tripRequestModel} = require('../models');
+const { tripRequestModel } = require('../models');
 
 router.post('/tripRequest', addTripRequest);
 router.get('/tripRequest', getTripRequest);
@@ -10,10 +10,10 @@ router.put('/tripRequest/:id', updateTripRequest);
 router.delete('/tripRequest/:id', deleteTripRequest);
 
 function addTripRequest(req, res, next) {
-  try {
   /*body :{"place":"string", "date":"string","numberOfStudents":"integer",
   "contactMethod":"string","otherDetails":"string"}*/
-    tripRequestModel.create(req.body) 
+  try {
+    tripRequestModel.create(req.body)
       .then(resolve => { res.status(201).send('done') })
       .catch(reject => { res.status(306).send(reject) });
   } catch (err) {

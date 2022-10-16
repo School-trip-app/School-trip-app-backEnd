@@ -2,7 +2,7 @@
 
 const express = require('express');
 const router = express.Router();
-const { packageImagesModel, packageModel} = require('../models');
+const { packageImagesModel, packageModel } = require('../models');
 
 router.post('/packageImages/:packageId', addPackageImages);
 router.get('/packageImages/:packageId', getPackageImages);
@@ -10,13 +10,13 @@ router.put('/packageImages/:id', updatePackageImages);
 router.delete('/packageImages/:id', deletePackageImages);
 
 function addPackageImages(req, res, next) {
-  try {  
-//{"packageId":"INTEGER","imageUrl":"STRING"}
-const packageImagesData = {
-  packageId: req.params.packageId,
-  imageUrl: req.body.imageUrl
-}
-    packageImagesModel.create(packageImagesData) 
+  //{"packageId":"INTEGER","imageUrl":"STRING"}
+  try {
+    const packageImagesData = {
+      packageId: req.params.packageId,
+      imageUrl: req.body.imageUrl
+    }
+    packageImagesModel.create(packageImagesData)
       .then(resolve => { res.status(201).send('done') })
       .catch(reject => { res.status(306).send(reject) });
   } catch (err) {
@@ -26,7 +26,7 @@ const packageImagesData = {
 
 function getPackageImages(req, res, next) {
   try {
-    packageImagesModel.findAll({ where: { packageId: req.params.packageId } },{ include: [packageModel] })
+    packageImagesModel.findAll({ where: { packageId: req.params.packageId }, include: [packageModel] })
       .then((resolve) => {
         res.status(200).send(resolve);
       })

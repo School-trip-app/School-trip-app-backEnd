@@ -1,6 +1,7 @@
 'use strict';
 const express = require('express');
 const router = express.Router();
+
 const { packageModel, packageDetailsModel, packageImagesModel } = require('../models');
 
 router.post('/package', addPackage);
@@ -29,6 +30,7 @@ function addPackage(req, res, next) {
     packageModel.create(req.body)
       .then(resolve => { res.status(201).send('done') })
       .catch(reject => { res.status(306).send(reject) });
+    
   } catch (err) {
     next(`Error inside addPackage function : ${err}`);
   }

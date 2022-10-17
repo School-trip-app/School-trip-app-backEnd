@@ -1,6 +1,5 @@
 "use strict";
 
-
 const express = require('express');
 const cors = require('cors');
 const { notFound } = require('./errorHandlers/404');
@@ -12,13 +11,16 @@ const packageImagesRouter = require('./routes/packageImages.route');
 const tripRequestRouter = require('./routes/tripRequest.route');
 const memoryRouter = require('./routes/memory.route');
 const commentRouter = require('./routes/comment.route');
-
+const uploadRouter = require('./routes/uploadtest.route');
 
 const app = express();
+
+app.set("view engine", "ejs");
 
 app.use(cors());
 app.use(express.json());
 
+app.use(uploadRouter);
 app.use(userRouter);
 app.use(packageRouter);
 app.use(packageDetailsRouter);

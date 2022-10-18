@@ -2,12 +2,14 @@
 const express = require('express');
 const router = express.Router();
 const { packageModel, packageDetailsModel, packageImagesModel } = require('../models');
+const axios = require('axios');
 
 router.post('/package', addPackage);
 router.get('/package', getPackages);
 router.put('/package/:id', updatePackage);
 router.delete('/package/:id', deletePackage);
 router.put('/package/rate/:id', updateRate);
+// router.post('/package/order', orderPackage);
 
 
 
@@ -15,7 +17,7 @@ router.put('/package/rate/:id', updateRate);
 
 
 
-function addPackage(req, res, next) {
+async function addPackage(req, res, next) {
   /* 
   body :{
     "packageName":"",
@@ -24,10 +26,41 @@ function addPackage(req, res, next) {
     "date":"DD/MM/YYYY",
     "weatherURL":""
   }
+
+
+  {
+    "packageName": "FirsPackage",
+    "locationName": "Aqaba" ,
+    "packageDiscription": "first trip to aqaba",
+    "tripDate": 5-DEC-2022,
+    "numberOfPeople":20 ,
+    "startingTime":"10:00 am" ,
+    "endingTime": "07:00 pm",
+    "price": "10JD/person",
+    "meals":"breakfast",
+    }
   */
   try {
+    let location = req.body.locationName;
+    // let response = await axios.get(`https://api.serpwow.com/search?api_key=14F38C62E6CA4AA597506C5589A3FC8C&engine=google&q=${location}&page=1&max_page=4&num=4`);
+    // req.body.locationUrl = response.data.search_information.search_tabs[1].link;
     packageModel.create(req.body)
-      .then(resolve => { res.status(201).send('done') })
+      .then((resolve) => {
+        axios.get(`https://api.unsplash.com//search/photos/?client_id=yDXvlsU43Gge_LLbViI2InRB72Jv4eAicowNiKOvi-Q&query=${location}`)
+          .then(reso => {
+            const arr = reso.data.results;
+            arr.map(item => {
+              const obj = {
+                packageId: resolve.id,
+                imageUrl: item.urls.full,
+              }
+              packageDetailsModel.create(obj)
+                .then(resolve => { })
+                .catch(reject => console.log(reject));
+            })
+            res.status(201).send('done')
+          }).catch(err => console.log(err));
+      })
       .catch(reject => { res.status(306).send(reject) });
   } catch (err) {
     next(`Error inside addPackage function : ${err}`);
@@ -79,5 +112,8 @@ async function updateRate(req, res, next) {
     next(`Error inside updateRate function : ${err}`);
   }
 }
+
+
+
 
 module.exports = router;

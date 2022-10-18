@@ -35,8 +35,8 @@ const tripRequestModel = createTripRequestTable(sequelize, DataTypes);
 packageModel.hasMany(packageDetailsModel, { forignKey: 'packageId', primaryKey: 'id' });
 packageDetailsModel.belongsTo(packageModel, { forignKey: 'packageId', targetKey: 'id' });
 
-packageModel.hasMany(packageImagesModel, { forignKey: 'packageId', primaryKey: 'id' });
-packageImagesModel.belongsTo(packageModel, { forignKey: 'packageId', targetKey: 'id' });
+// packageModel.hasMany(packageImagesModel, { forignKey: 'packageId', primaryKey: 'id' });
+// packageImagesModel.belongsTo(packageModel, { forignKey: 'packageId', targetKey: 'id' });
 
 UserModel.hasMany(memoriesModel, { forignKey: 'userId', primaryKey: 'id' });
 memoriesModel.belongsTo(UserModel, { forignKey: 'userId', targetKey: 'id' });

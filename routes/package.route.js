@@ -1,21 +1,23 @@
 'use strict';
+
+const { packageModel, packageWeatherModel, packageImagesModel, tripsOrdersModel, UserModel } = require('../models');
 const express = require('express');
 const router = express.Router();
-const { packageModel, packageWeatherModel, packageImagesModel } = require('../models');
 const axios = require('axios');
+
+//========================================================== Routes ==========================================================//
 
 router.post('/package', addPackage);
 router.get('/package', getPackages);
 router.put('/package/:id', updatePackage);
 router.delete('/package/:id', deletePackage);
 router.put('/package/rate/:id', updateRate);
-// router.post('/package/order', orderPackage);
 
+router.post('/package/order/:userId/:packageId', orderPackage);
+router.get('/package/order', getOrders);
+router.delete('/package/order/:id', deleteOrder);
 
-
-
-
-
+//========================================================== Handlers ==========================================================//
 
 async function addPackage(req, res, next) {
   // request body = {
@@ -73,7 +75,7 @@ async function addPackage(req, res, next) {
 
 function getPackages(req, res, next) {
   try {
-    packageModel.findAll({ include: [packageImagesModel] })
+    packageModel.findAll({ include: [packageImagesModel, packageWeatherModel] })
       .then((resolve) => {
         res.status(200).send(resolve);
       })
@@ -116,6 +118,44 @@ async function updateRate(req, res, next) {
     next(`Error inside updateRate function : ${err}`);
   }
 }
+
+async function orderPackage(req, res, next) {
+  try {
+    const Order = {
+      userId: req.params.userId,
+      packageId: req.params.packageId,
+      notes: req.body.notes,
+    }
+    tripsOrdersModel.create(Order)
+      .then(resolve => { res.status(201).send(`Order sent`) })
+      .catch(reject => { res.status(403).send(`Cannot update : ${reject}`) });
+  } catch (err) {
+    next(`Error inside orderPackage function : ${err}`);
+  }
+}
+
+async function getOrders(req, res, next) {
+  try {
+    tripsOrdersModel.findAll({ include: [packageModel, UserModel] })
+      .then(resolve => { res.status(201).send(resolve) })
+      .catch(reject => { res.status(403).send(`Cannot update : ${reject}`) });
+  } catch (err) {
+    next(`Error inside orderPackage function : ${err}`);
+  }
+}
+
+async function deleteOrder(req, res, next) {
+  try {
+    tripsOrdersModel.destroy({ where: { id: req.params.id } })
+      .then(resolve => { res.status(201).send(resolve) })
+      .catch(reject => { res.status(403).send(`Cannot update : ${reject}`) });
+  } catch (err) {
+    next(`Error inside orderPackage function : ${err}`);
+  }
+}
+
+
+
 
 
 

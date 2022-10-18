@@ -17,8 +17,8 @@ const commentRouter = require('./routes/comment.route');
 const app = express();
 
 app.use(cors());
+app.use('/Images', express.static('./Images'));
 app.use(express.json());
-
 app.use(userRouter);
 app.use(packageRouter);
 app.use(packageDetailsRouter);

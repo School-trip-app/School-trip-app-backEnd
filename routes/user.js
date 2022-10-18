@@ -14,7 +14,9 @@ const createnewUser = async (req, res) => {
             username: userInfo.username,
             email: userInfo.email,
             password: await bcrypt.hash(userInfo.password, 12),
-            userRole: userInfo.userRole
+            userRole: userInfo.userRole,
+            phonenumber: userInfo.phonenumber,
+            gender: userInfo.gender
         };
         const user = await UserModel.create(newUser);
         if (user) res.status(201).json(user);
@@ -55,5 +57,17 @@ const signIN = async (req, res) => {
     }
 }
 router.post('/signin', signIN);
+
+const getAllUsers = async (req, res) => {
+    try {
+        const user = await UserModel.findAll({ include: { all: true } });
+        res.status(200).json(user);
+    } catch (error) {
+        res.status(500).json({ message: `${error}` });
+    }
+}
+
+router.get('/users', getAllUsers);
+
 
 module.exports = router;

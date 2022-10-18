@@ -1,6 +1,13 @@
 'use strict';
 const express = require('express');
 const router = express.Router();
+const axios = require('axios');
+
+const bodyParser = require('body-parser');
+router.use(express.json());
+
+router.use(bodyParser.urlencoded({ extended: true }));
+
 const { packageModel, packageDetailsModel, packageImagesModel } = require('../models');
 
 router.post('/package', addPackage);
@@ -15,7 +22,7 @@ router.put('/package/rate/:id', updateRate);
 
 
 
-function addPackage(req, res, next) {
+async function addPackage(req, res, next) {
   /* 
   body :{
     "packageName":"",
@@ -26,6 +33,28 @@ function addPackage(req, res, next) {
   }
   */
   try {
+
+
+    const response = await axios({
+      url: `https://api.weatherbit.io/v2.0/forecast/daily?city=${req.body.locationName}&key=8840fcd16a3743e085ae62df20471696`,
+      method: 'get',
+    });
+
+    response.data.data.map((item) => {
+      if (item.valid_date === req.body.date) {
+        req.body.weather = JSON.stringify({
+          description: item.weather.description,
+          high_temp: item.high_temp,
+          low_temp: item.low_temp,
+          wind_cdir_full: item.wind_cdir_full,
+          wind_spd: item.wind_spd,
+
+        });
+      }
+
+    });
+
+
     packageModel.create(req.body)
       .then(resolve => { res.status(201).send('done') })
       .catch(reject => { res.status(306).send(reject) });
@@ -46,9 +75,31 @@ function getPackages(req, res, next) {
   }
 }
 
-function updatePackage(req, res, next) {
+async function updatePackage(req, res, next) {
   try {
-    packageModel.update(req.body, { where: { id: req.params.id } })
+
+    const response = await axios({
+      url: `https://api.weatherbit.io/v2.0/forecast/daily?city=${req.body.locationName}&key=8840fcd16a3743e085ae62df20471696`,
+      method: 'get',
+    });
+
+    response.data.data.map((item) => {
+      if (item.valid_date === req.body.date) {
+        req.body.weather = JSON.stringify({
+          description: item.weather.description,
+          high_temp: item.high_temp,
+          low_temp: item.low_temp,
+          wind_cdir_full: item.wind_cdir_full,
+          wind_spd: item.wind_spd,
+
+        });
+      }
+
+    });
+
+ 
+
+    packageModel.update(req.body , { where: { id: req.params.id } })
       .then(resolve => { res.status(200).send('updated') })
       .catch(reject => { console.log(`cannot update`) });
   } catch (err) {

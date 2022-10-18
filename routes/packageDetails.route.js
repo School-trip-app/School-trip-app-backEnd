@@ -18,7 +18,6 @@ function addPackageDetails(req, res, next) {
     const packageDetailsData = {
       packageId: req.params.packageId,
       locationURL: req.body.locationURL,
-      tripDate: req.body.tripDate,
       numberOfPeople: req.body.numberOfPeople,
       startingTime: req.body.startingTime,
       endingTime: req.body.endingTime,

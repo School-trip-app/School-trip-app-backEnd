@@ -12,6 +12,7 @@ const packageImagesRouter = require('./routes/packageImages.route');
 const tripRequestRouter = require('./routes/tripRequest.route');
 const memoryRouter = require('./routes/memory.route');
 const commentRouter = require('./routes/comment.route');
+const photographerRouter = require('./routes/photographer.route');
 // const stripe = require("./routes/payment");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
@@ -27,7 +28,7 @@ app.use(packageImagesRouter);
 app.use(tripRequestRouter);
 app.use(memoryRouter);
 app.use(commentRouter);
-
+app.use(photographerRouter);
 app.use(notFound);
 app.use(internalError);
 // app.use("/api/stripe",stripe);

@@ -1,22 +1,14 @@
 "use strict";
 
+
+
 require('dotenv').config();
-const { db } = require('./models');
+const { db } = require('./modules/index');
 
 const server = require('./server');
-// const bodyParser = require("body-parser");
 
-// const stripe = require("./routes/payment");
-
-
-
-// app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(bodyParser.json());
-
-
-db.sync()
-  .then(() => {
+db.sync().then(() => {
     server.start(process.env.PORT || 4000);
-  }).catch((err) => console.log(err));
+}).catch((err) => console.log(err));
 
 

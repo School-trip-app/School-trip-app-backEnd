@@ -13,7 +13,7 @@ const tripRequestRouter = require('./routes/tripRequest.route');
 const memoryRouter = require('./routes/memory.route');
 const commentRouter = require('./routes/comment.route');
 // const stripe = require("./routes/payment");
-
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 const app = express();
 

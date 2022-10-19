@@ -7,10 +7,10 @@ const User = require('./user');
 const { createCommentTable } = require("./comment.model");
 const { createMemoriesTable } = require("./memories.model");
 const { createPackageTable } = require("./package.model");
-const { createPackageDetailsTable } = require("./packageDetails.model");
+const { createPackageWeatherTable } = require("./packageWeather.model");
 const { createPackageImagesTable } = require("./packageImages.model");
 const { createTripRequestTable } = require("./tripRequest.model");
-
+const { createTripsOrderTable } = require('./tripsOrders.model');
 const POSTGRES_URL = process.env.DATABASE_URL;
 
 const sequelizeOption = {
@@ -28,12 +28,13 @@ const UserModel = User(sequelize, DataTypes);
 const commentModel = createCommentTable(sequelize, DataTypes);
 const memoriesModel = createMemoriesTable(sequelize, DataTypes);
 const packageModel = createPackageTable(sequelize, DataTypes);
-const packageDetailsModel = createPackageDetailsTable(sequelize, DataTypes);
+const packageWeatherModel = createPackageWeatherTable(sequelize, DataTypes);
 const packageImagesModel = createPackageImagesTable(sequelize, DataTypes);
 const tripRequestModel = createTripRequestTable(sequelize, DataTypes);
+const tripsOrdersModel = createTripsOrderTable(sequelize, DataTypes);
 
-packageModel.hasMany(packageDetailsModel, { forignKey: 'packageId', primaryKey: 'id' });
-packageDetailsModel.belongsTo(packageModel, { forignKey: 'packageId', targetKey: 'id' });
+packageModel.hasOne(packageWeatherModel, { forignKey: 'packageId', primaryKey: 'id' });
+packageWeatherModel.belongsTo(packageModel, { forignKey: 'packageId', targetKey: 'id' });
 
 packageModel.hasMany(packageImagesModel, { forignKey: 'packageId', primaryKey: 'id' });
 packageImagesModel.belongsTo(packageModel, { forignKey: 'packageId', targetKey: 'id' });
@@ -46,6 +47,14 @@ commentModel.belongsTo(UserModel, { forignKey: 'userId', targetKey: 'id' });
 
 memoriesModel.hasMany(commentModel, { forignKey: 'memoryId', primaryKey: 'id' });
 commentModel.belongsTo(memoriesModel, { forignKey: 'memoryId', targetKey: 'id' });
+
+UserModel.hasMany(tripsOrdersModel, { forignKey: 'userId', primaryKey: 'id' });
+tripsOrdersModel.belongsTo(UserModel, { forignKey: 'userId', targetKey: 'id' });
+
+packageModel.hasMany(tripsOrdersModel, { forignKey: 'packageId', primaryKey: 'id' });
+tripsOrdersModel.belongsTo(packageModel, { forignKey: 'packageId', targetKey: 'id' });
+
+
 
 sequelize.authenticate()
 	.then(() => {
@@ -61,7 +70,8 @@ module.exports = {
 	commentModel,
 	memoriesModel,
 	packageModel,
-	packageDetailsModel,
+	packageWeatherModel,
 	packageImagesModel,
-	tripRequestModel
+	tripRequestModel,
+	tripsOrdersModel
 }

@@ -8,7 +8,8 @@ const path = require('path');
 
 const { UserModel } = require('../models');
 const { checkUser } = require('../middlewares/userCheck');
-const bearerAuth=require('../middlewares/bearerAuth')
+const bearerAuth=require('../middlewares/bearerAuth');
+
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'Images')

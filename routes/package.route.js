@@ -1,7 +1,11 @@
 'use strict';
+
+const { packageModel, packageWeatherModel, packageImagesModel, tripsOrdersModel, UserModel } = require('../models');
 const express = require('express');
 const router = express.Router();
-const { packageModel, packageDetailsModel, packageImagesModel } = require('../models');
+const axios = require('axios');
+
+//========================================================== Routes ==========================================================//
 
 router.post('/package', addPackage);
 router.get('/package', getPackages);
@@ -9,26 +13,61 @@ router.put('/package/:id', updatePackage);
 router.delete('/package/:id', deletePackage);
 router.put('/package/rate/:id', updateRate);
 
+router.post('/package/order/:userId/:packageId', orderPackage);
+router.get('/package/order', getOrders);
+router.delete('/package/order/:id', deleteOrder);
 
+//========================================================== Handlers ==========================================================//
 
-
-
-
-
-function addPackage(req, res, next) {
-  /* 
-  body :{
-    "packageName":"",
-    "locationName":"",
-    "packageDiscription":"",
-    "date":"DD/MM/YYYY",
-    "weatherURL":""
-  }
-  */
+async function addPackage(req, res, next) {
+  // request body = {
+  //     "packageName": "unique Package name",
+  //     "locationName": "jordanian city",
+  //     "packageDiscription": "add here the discription about the trip",
+  //     "tripDate": "2022-10-18",
+  //     "numberOfPeople":20 ,
+  //     "startingTime":"10:00 am" ,
+  //     "endingTime": "07:00 pm",
+  //     "price": "15JD/person",
+  //     "meals":"breakfast and lunch",
+  // }
   try {
+    let location = req.body.locationName;
+    let weatherApiResponse = await axios.get(`https://api.weatherbit.io/v2.0/forecast/daily?city={${location}}&key=8840fcd16a3743e085ae62df20471696`);
+    req.body.locationLat = weatherApiResponse.data.lat;
+    req.body.locationLon = weatherApiResponse.data.lon;
+    const weatherArray = weatherApiResponse.data.data;
+    let tripDayWeather = weatherArray.find(item => item.valid_date == req.body.tripDate);
     packageModel.create(req.body)
-      .then(resolve => { res.status(201).send('done') })
-      .catch(reject => { res.status(306).send(reject) });
+      .then(createdPackage => {
+        const weatherObj = {
+          packageId: createdPackage.id,
+          temp: tripDayWeather.temp,
+          minTemp: tripDayWeather.min_temp,
+          maxTemp: tripDayWeather.max_temp,
+          windSpeed: tripDayWeather.wind_spd,
+          description: tripDayWeather.weather.description,
+        }
+        packageWeatherModel.create(weatherObj)
+          .then(packageWeather => { })
+          .catch(reject => res.status(501).send(`cant create weather :${reject}`));
+        axios.get(`https://api.unsplash.com//search/photos/?client_id=yDXvlsU43Gge_LLbViI2InRB72Jv4eAicowNiKOvi-Q&query=${location}`)
+          .then(unsplash => {
+            const imagesArray = unsplash.data.results;
+            imagesArray.map(item => {
+              const obj = {
+                packageId: createdPackage.id,
+                imageUrl: item.urls.full,
+              }
+              packageImagesModel.create(obj)
+                .then(packageImage => { })
+                .catch(reject => res.status(501).send(`cant create an image :${reject}`));
+            })
+            res.status(201).send('Successfully Created')
+          })
+          .catch(err => console.log(err));
+      })
+      .catch(reject => { res.status(501).send(`cant create a package :${reject}`) });
   } catch (err) {
     next(`Error inside addPackage function : ${err}`);
   }
@@ -36,7 +75,7 @@ function addPackage(req, res, next) {
 
 function getPackages(req, res, next) {
   try {
-    packageModel.findAll({ include: [packageDetailsModel, packageImagesModel] })
+    packageModel.findAll({ include: [packageImagesModel, packageWeatherModel] })
       .then((resolve) => {
         res.status(200).send(resolve);
       })
@@ -79,5 +118,46 @@ async function updateRate(req, res, next) {
     next(`Error inside updateRate function : ${err}`);
   }
 }
+
+async function orderPackage(req, res, next) {
+  try {
+    const Order = {
+      userId: req.params.userId,
+      packageId: req.params.packageId,
+      notes: req.body.notes,
+    }
+    tripsOrdersModel.create(Order)
+      .then(resolve => { res.status(201).send(`Order sent`) })
+      .catch(reject => { res.status(403).send(`Cannot update : ${reject}`) });
+  } catch (err) {
+    next(`Error inside orderPackage function : ${err}`);
+  }
+}
+
+async function getOrders(req, res, next) {
+  try {
+    tripsOrdersModel.findAll({ include: [packageModel, UserModel] })
+      .then(resolve => { res.status(201).send(resolve) })
+      .catch(reject => { res.status(403).send(`Cannot update : ${reject}`) });
+  } catch (err) {
+    next(`Error inside orderPackage function : ${err}`);
+  }
+}
+
+async function deleteOrder(req, res, next) {
+  try {
+    tripsOrdersModel.destroy({ where: { id: req.params.id } })
+      .then(resolve => { res.status(201).send(resolve) })
+      .catch(reject => { res.status(403).send(`Cannot update : ${reject}`) });
+  } catch (err) {
+    next(`Error inside orderPackage function : ${err}`);
+  }
+}
+
+
+
+
+
+
 
 module.exports = router;

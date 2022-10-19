@@ -14,12 +14,12 @@ const { createTripsOrderTable } = require('./tripsOrders.model');
 const POSTGRES_URL = process.env.DATABASE_URL;
 
 const sequelizeOption = {
-	dialectOptions: {
-		ssl: {
-			require: true,
-			rejectUnauthorized: false
-		}
-	}
+	// dialectOptions: {
+	// 	ssl: {
+	// 		require: true,
+	// 		rejectUnauthorized: false
+	// 	}
+	// }
 }
 
 let sequelize = new Sequelize(POSTGRES_URL, sequelizeOption);
@@ -53,8 +53,6 @@ tripsOrdersModel.belongsTo(UserModel, { forignKey: 'userId', targetKey: 'id' });
 
 packageModel.hasMany(tripsOrdersModel, { forignKey: 'packageId', primaryKey: 'id' });
 tripsOrdersModel.belongsTo(packageModel, { forignKey: 'packageId', targetKey: 'id' });
-
-
 
 sequelize.authenticate()
 	.then(() => {

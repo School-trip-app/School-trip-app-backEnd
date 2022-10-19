@@ -12,7 +12,7 @@ const packageImagesRouter = require('./routes/packageImages.route');
 const tripRequestRouter = require('./routes/tripRequest.route');
 const memoryRouter = require('./routes/memory.route');
 const commentRouter = require('./routes/comment.route');
-
+const stripe = require("./routes/payment");
 
 const app = express();
 
@@ -29,6 +29,10 @@ app.use(commentRouter);
 
 app.use(notFound);
 app.use(internalError);
+
+// app.use("/api/stripe",stripe);
+
+// app.use(/payment/, router);
 
 const start = (port) => {
   app.listen(port, () => console.log(`Up running on port ${port}`));

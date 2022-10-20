@@ -5,7 +5,11 @@ function createTripsOrderTable(sequelize, DataTypes) {
     sequelize.define("tripOrders", {
       userId: { type: DataTypes.INTEGER, allowNull: false },
       packageId: { type: DataTypes.INTEGER, allowNull: false },
-      notes: { type: DataTypes.STRING }
+      notes: { type: DataTypes.STRING },
+      photogerId:{
+        type:DataTypes.INTEGER,
+        allowNull:false
+      }
     })
   )
 }

@@ -57,7 +57,6 @@ module.exports = (sequleize, DataTypes) => {
         image:{
             type:DataTypes.STRING,
             defaultValue: ''
-
         },
         imageprofile: {
             type: DataTypes.STRING,

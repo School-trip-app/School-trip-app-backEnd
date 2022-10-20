@@ -57,7 +57,8 @@ tripsOrdersModel.belongsTo(UserModel, { forignKey: 'userId', targetKey: 'id' });
 
 packageModel.hasMany(tripsOrdersModel, { forignKey: 'packageId', primaryKey: 'id' });
 tripsOrdersModel.belongsTo(packageModel, { forignKey: 'packageId', targetKey: 'id' });
-
+photographerModel.hasMany(tripsOrdersModel, {forignKey:'photogerId',primaryKey:'id' });
+tripsOrdersModel.belongsTo(photographerModel, {forignKey:'photogerId',targetKey:'id'})
 
 
 sequelize.authenticate()

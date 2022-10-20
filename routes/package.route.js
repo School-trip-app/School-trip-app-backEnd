@@ -1,6 +1,6 @@
 'use strict';
 
-const { packageModel, packageWeatherModel, packageImagesModel, tripsOrdersModel, UserModel } = require('../models');
+const { packageModel, packageWeatherModel, packageImagesModel, tripsOrdersModel, UserModel, photographerModel } = require('../models');
 const express = require('express');
 const router = express.Router();
 const axios = require('axios');
@@ -136,7 +136,7 @@ async function orderPackage(req, res, next) {
 
 async function getOrders(req, res, next) {
   try {
-    tripsOrdersModel.findAll({ include: [packageModel, UserModel] })
+    tripsOrdersModel.findAll({ include: [packageModel, UserModel, photographerModel] })
       .then(resolve => { res.status(201).send(resolve) })
       .catch(reject => { res.status(403).send(`Cannot update : ${reject}`) });
   } catch (err) {

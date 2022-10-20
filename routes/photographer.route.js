@@ -14,6 +14,7 @@ const addPhotographer = async (req, res) => {
             phoneNumber: info.phoneNumber,
             rate: info.rate,
             totalRate: info.rate,
+            price:info.price
         }
         const photographer = await photographerModel.create(newPhotographer);
         res.status(200).send(photographer);

@@ -31,7 +31,7 @@ app.use(packageDetailsRouter);
 app.use(packageImagesRouter);
 app.use(tripRequestRouter);
 app.use(memoryRouter);
-app.use(commentRouter);
+// app.use(commentRouter);
 
 app.use(productRouter);
 app.use(productOrderRouter);

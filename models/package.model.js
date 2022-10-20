@@ -4,6 +4,7 @@ function createPackageTable(sequelize, DataTypes) {
 	return (
 		sequelize.define("package", {
 			packageName: { type: DataTypes.STRING, allowNull: false, unique: true },
+			city: { type: DataTypes.STRING, allowNull: false },
 			locationName: { type: DataTypes.STRING, allowNull: false },
 			locationLat: { type: DataTypes.STRING, allowNull: false },
 			locationLon: { type: DataTypes.STRING, allowNull: false },
@@ -17,6 +18,8 @@ function createPackageTable(sequelize, DataTypes) {
 			endingTime: { type: DataTypes.STRING, allowNull: false },
 			price: { type: DataTypes.STRING, allowNull: false },
 			meals: { type: DataTypes.STRING },
+			pickUpPoint: { type: DataTypes.STRING, allowNull: false },
+			dropPoint: { type: DataTypes.STRING, allowNull: false },
 		})
 	);
 }

@@ -20,20 +20,9 @@ router.delete('/package/order/:id', deleteOrder);
 //========================================================== Handlers ==========================================================//
 
 async function addPackage(req, res, next) {
-  // request body = {
-  //     "packageName": "unique Package name",
-  //     "locationName": "jordanian city",
-  //     "packageDiscription": "add here the discription about the trip",
-  //     "tripDate": "2022-10-18",
-  //     "numberOfPeople":20 ,
-  //     "startingTime":"10:00 am" ,
-  //     "endingTime": "07:00 pm",
-  //     "price": "15JD/person",
-  //     "meals":"breakfast and lunch",
-  // }
   try {
-    let location = req.body.locationName;
-    let weatherApiResponse = await axios.get(`https://api.weatherbit.io/v2.0/forecast/daily?city={${location}}&key=8840fcd16a3743e085ae62df20471696`);
+    let tripCityName = req.body.city;
+    let weatherApiResponse = await axios.get(`https://api.weatherbit.io/v2.0/forecast/daily?city=${tripCityName}&key=8840fcd16a3743e085ae62df20471696`);
     req.body.locationLat = weatherApiResponse.data.lat;
     req.body.locationLon = weatherApiResponse.data.lon;
     const weatherArray = weatherApiResponse.data.data;
@@ -51,7 +40,7 @@ async function addPackage(req, res, next) {
         packageWeatherModel.create(weatherObj)
           .then(packageWeather => { })
           .catch(reject => res.status(501).send(`cant create weather :${reject}`));
-        axios.get(`https://api.unsplash.com//search/photos/?client_id=yDXvlsU43Gge_LLbViI2InRB72Jv4eAicowNiKOvi-Q&query=${location}`)
+        axios.get(`https://api.unsplash.com//search/photos/?client_id=yDXvlsU43Gge_LLbViI2InRB72Jv4eAicowNiKOvi-Q&query=${tripCityName}`)
           .then(unsplash => {
             const imagesArray = unsplash.data.results;
             imagesArray.map(item => {
@@ -85,10 +74,33 @@ function getPackages(req, res, next) {
   }
 }
 
-function updatePackage(req, res, next) {
+async function updatePackage(req, res, next) {
   try {
+    let packagex = await packageModel.findOne({ where: { id: req.params.id } });
     packageModel.update(req.body, { where: { id: req.params.id } })
-      .then(resolve => { res.status(200).send('updated') })
+      .then(resolve => {
+        let bodyKeys = Object.keys(req.body);
+        if (bodyKeys.includes("tripDate")) {
+          axios.get(`https://api.weatherbit.io/v2.0/forecast/daily?city=${packagex.city}&key=8840fcd16a3743e085ae62df20471696`)
+            .then(weatherData => {
+              const weatherArray = weatherData.data.data;
+              let tripDayWeather = weatherArray.find(item => item.valid_date == req.body.tripDate);
+              const weatherObj = {
+                temp: tripDayWeather.temp,
+                minTemp: tripDayWeather.min_temp,
+                maxTemp: tripDayWeather.max_temp,
+                windSpeed: tripDayWeather.wind_spd,
+                description: tripDayWeather.weather.description,
+              }
+              packageWeatherModel.update(weatherObj, { where: { packageId: packagex.id } })
+                .then(packageWeather => { res.status(200).send('updated with weather') })
+                .catch(reject => res.status(501).send(`cant create weather :${reject}`));
+            })
+            .catch(reject => res.status(501).send(`error inside update weather:${reject}`));
+        } else {
+          res.status(200).send('updated')
+        }
+      })
       .catch(reject => { console.log(`cannot update`) });
   } catch (err) {
     next(`Error inside updatePackage function : ${err}`);

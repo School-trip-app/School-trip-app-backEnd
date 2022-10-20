@@ -11,8 +11,12 @@ const { createPackageWeatherTable } = require("./packageWeather.model");
 const { createPackageImagesTable } = require("./packageImages.model");
 const { createTripRequestTable } = require("./tripRequest.model");
 const { createTripsOrderTable } = require('./tripsOrders.model');
+
 const { createProductTable } = require('./product.model');
 const { createProductOrderTable } = require('./productOrder.model');
+
+
+const photographers = require('./photographer.model');
 
 const POSTGRES_URL = process.env.DATABASE_URL;
 
@@ -27,6 +31,7 @@ const sequelizeOption = {
 
 let sequelize = new Sequelize(POSTGRES_URL, sequelizeOption);
 
+
 const UserModel = User(sequelize, DataTypes);
 const commentModel = createCommentTable(sequelize, DataTypes);
 const memoriesModel = createMemoriesTable(sequelize, DataTypes);
@@ -35,8 +40,12 @@ const packageWeatherModel = createPackageWeatherTable(sequelize, DataTypes);
 const packageImagesModel = createPackageImagesTable(sequelize, DataTypes);
 const tripRequestModel = createTripRequestTable(sequelize, DataTypes);
 const tripsOrdersModel = createTripsOrderTable(sequelize, DataTypes);
+
 const productModel= createProductTable(sequelize, DataTypes);
 const productOrderModel = createProductOrderTable(sequelize, DataTypes);
+
+const photographerModel = photographers(sequelize, DataTypes);
+
 
 
 packageModel.hasOne(packageWeatherModel, { forignKey: 'packageId', primaryKey: 'id' });
@@ -85,6 +94,10 @@ module.exports = {
 	packageImagesModel,
 	tripRequestModel,
 	tripsOrdersModel,
+
 	productModel,
 	productOrderModel
+
+	photographerModel
+
 }

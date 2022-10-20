@@ -41,7 +41,7 @@ const packageImagesModel = createPackageImagesTable(sequelize, DataTypes);
 const tripRequestModel = createTripRequestTable(sequelize, DataTypes);
 const tripsOrdersModel = createTripsOrderTable(sequelize, DataTypes);
 
-const productModel= createProductTable(sequelize, DataTypes);
+const productModel = createProductTable(sequelize, DataTypes);
 const productOrderModel = createProductOrderTable(sequelize, DataTypes);
 
 const photographerModel = photographers(sequelize, DataTypes);
@@ -94,10 +94,7 @@ module.exports = {
 	packageImagesModel,
 	tripRequestModel,
 	tripsOrdersModel,
-
 	productModel,
-	productOrderModel
-
+	productOrderModel,
 	photographerModel
-
 }

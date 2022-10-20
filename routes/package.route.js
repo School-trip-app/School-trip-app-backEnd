@@ -107,11 +107,14 @@ function deletePackage(req, res, next) {
 
 async function updateRate(req, res, next) {
   try {
-    const packagee = await packageModel.findOne({ where: { id: req.params.id } })
-    const userRate = req.body.rate;
-    const ratesNumber = packagee.ratesNumber + 1;
-    let newRate = (packagee.rate + userRate) / `${ratesNumber}`;
-    packageModel.update({ rate: `${newRate}`, ratesNumber: ratesNumber }, { where: { id: req.params.id } })
+    const packagee = await packageModel.findOne({ where: { id: req.params.id } });
+
+    // make avarige of the rate and update the package by math logic
+    const newretaPoints = (packagee.ratePoints + req.body.ratePoints);
+    const newratePeople = (packagee.ratePeople + 1);
+    const newRate = (newretaPoints / newratePeople);
+
+    packageModel.update({ rate: `${newRate}`, ratePeople: newratePeople, ratePoints: newretaPoints }, { where: { id: req.params.id } })
       .then(resolve => { res.status(200).send('rate updated') })
       .catch(reject => { console.log(`${reject}`) });
   } catch (err) {

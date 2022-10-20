@@ -7,7 +7,7 @@ const { commentModel, memoriesModel, UserModel } = require('../models');
 router.post('/comment/:userId/:memoryId', addComment);
 router.get('/comment/:memoryId', getMemoryComments);
 router.put('/comment/:id', updateComment);
-router.delete('/comment/id', deleteComment);
+router.delete('/comment/:id', deleteComment);
 
 function addComment(req, res, next) {
   // body:{"userId":"integer","memoryId":"integer","comment":"string"}

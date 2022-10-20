@@ -31,6 +31,10 @@ const photographers = (sequleize, DataTypes) => {
         totalRate: {
             type: DataTypes.FLOAT,
             defaultValue: 0,
+        },
+        price:{
+            type:DataTypes.INTEGER,
+            allowNull:false
         }
     });
     return photographer;

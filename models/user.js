@@ -3,7 +3,7 @@
 const jwt = require('jsonwebtoken');
 
 module.exports = (sequleize, DataTypes) => {
-    const User = sequleize.define("userTable", {
+    const User = sequleize.define("user", {
         username: {
             type: DataTypes.STRING,
             allowNull: false
@@ -30,7 +30,7 @@ module.exports = (sequleize, DataTypes) => {
             }
         },
         userRole: {
-            type: DataTypes.ENUM('admin', 'school', 'student','enabledSchool'),
+            type: DataTypes.ENUM('admin', 'school', 'student', 'enabledSchool'),
             allowNull: false,
             defaultValue: 'student'
         },
@@ -41,7 +41,7 @@ module.exports = (sequleize, DataTypes) => {
                     admin: ['read', 'create', 'delete', 'update'],
                     school: ['read', 'create'],
                     student: ['read', 'create'],
-                    enabledSchool:['read','create','canBookTrip','update','delete']
+                    enabledSchool: ['read', 'create', 'canBookTrip', 'update', 'delete']
                 }
                 return ACL[this.userRole];
             }
@@ -49,13 +49,12 @@ module.exports = (sequleize, DataTypes) => {
         phonenumber: {
             type: DataTypes.STRING,
             allowNull: false,
-
         },
         gender: {
             type: DataTypes.ENUM('male', 'female'),
         },
-        image:{
-            type:DataTypes.STRING,
+        image: {
+            type: DataTypes.STRING,
             defaultValue: ''
         },
         imageprofile: {
@@ -69,7 +68,6 @@ module.exports = (sequleize, DataTypes) => {
             }
         },
     });
-
     User.authenticateToket = (token) => {
         return jwt.verify(token, process.env.JWT_SECRET, (err, decode) => {
             if (err) {
@@ -79,6 +77,5 @@ module.exports = (sequleize, DataTypes) => {
             }
         })
     }
-
     return User;
 }

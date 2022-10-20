@@ -11,16 +11,22 @@ const { createPackageWeatherTable } = require("./packageWeather.model");
 const { createPackageImagesTable } = require("./packageImages.model");
 const { createTripRequestTable } = require("./tripRequest.model");
 const { createTripsOrderTable } = require('./tripsOrders.model');
+
+const { createProductTable } = require('./product.model');
+const { createProductOrderTable } = require('./productOrder.model');
+
+
 const photographers = require('./photographer.model');
+
 const POSTGRES_URL = process.env.DATABASE_URL;
 
 const sequelizeOption = {
-	dialectOptions: {
-		ssl: {
-			require: true,
-			rejectUnauthorized: false
-		}
-	}
+	// dialectOptions: {
+	// 	ssl: {
+	// 		require: true,
+	// 		rejectUnauthorized: false
+	// 	}
+	// }
 }
 
 let sequelize = new Sequelize(POSTGRES_URL, sequelizeOption);
@@ -34,7 +40,12 @@ const packageWeatherModel = createPackageWeatherTable(sequelize, DataTypes);
 const packageImagesModel = createPackageImagesTable(sequelize, DataTypes);
 const tripRequestModel = createTripRequestTable(sequelize, DataTypes);
 const tripsOrdersModel = createTripsOrderTable(sequelize, DataTypes);
+
+const productModel = createProductTable(sequelize, DataTypes);
+const productOrderModel = createProductOrderTable(sequelize, DataTypes);
+
 const photographerModel = photographers(sequelize, DataTypes);
+
 
 
 packageModel.hasOne(packageWeatherModel, { forignKey: 'packageId', primaryKey: 'id' });
@@ -57,8 +68,15 @@ tripsOrdersModel.belongsTo(UserModel, { forignKey: 'userId', targetKey: 'id' });
 
 packageModel.hasMany(tripsOrdersModel, { forignKey: 'packageId', primaryKey: 'id' });
 tripsOrdersModel.belongsTo(packageModel, { forignKey: 'packageId', targetKey: 'id' });
+
 photographerModel.hasMany(tripsOrdersModel, {forignKey:'photogerId',primaryKey:'id' });
 tripsOrdersModel.belongsTo(photographerModel, {forignKey:'photogerId',targetKey:'id'})
+
+productModel.hasMany(productOrderModel, { forignKey: 'productId', primaryKey: 'id' });
+productOrderModel.belongsTo(productModel, { forignKey: 'productId', targetKey: 'id' });
+
+UserModel.hasMany(productOrderModel, { forignKey: 'userId', primaryKey: 'id' });
+productOrderModel.belongsTo(UserModel, { forignKey: 'userId', targetKey: 'id' })
 
 
 sequelize.authenticate()
@@ -79,5 +97,7 @@ module.exports = {
 	packageImagesModel,
 	tripRequestModel,
 	tripsOrdersModel,
+	productModel,
+	productOrderModel,
 	photographerModel
 }

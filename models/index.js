@@ -11,6 +11,7 @@ const { createPackageWeatherTable } = require("./packageWeather.model");
 const { createPackageImagesTable } = require("./packageImages.model");
 const { createTripRequestTable } = require("./tripRequest.model");
 const { createTripsOrderTable } = require('./tripsOrders.model');
+const { createHospitalTable } = require("./hospital.model");
 const POSTGRES_URL = process.env.DATABASE_URL;
 
 const sequelizeOption = {
@@ -32,12 +33,17 @@ const packageWeatherModel = createPackageWeatherTable(sequelize, DataTypes);
 const packageImagesModel = createPackageImagesTable(sequelize, DataTypes);
 const tripRequestModel = createTripRequestTable(sequelize, DataTypes);
 const tripsOrdersModel = createTripsOrderTable(sequelize, DataTypes);
+const hospitalModel = createHospitalTable(sequelize, DataTypes);
+
 
 packageModel.hasOne(packageWeatherModel, { forignKey: 'packageId', primaryKey: 'id' });
 packageWeatherModel.belongsTo(packageModel, { forignKey: 'packageId', targetKey: 'id' });
 
 packageModel.hasMany(packageImagesModel, { forignKey: 'packageId', primaryKey: 'id' });
 packageImagesModel.belongsTo(packageModel, { forignKey: 'packageId', targetKey: 'id' });
+
+packageModel.hasMany(hospitalModel, { forignKey: 'packageId', primaryKey: 'id' });
+hospitalModel.belongsTo(packageModel, { forignKey: 'packageId', targetKey: 'id' });
 
 UserModel.hasMany(memoriesModel, { forignKey: 'userId', primaryKey: 'id' });
 memoriesModel.belongsTo(UserModel, { forignKey: 'userId', targetKey: 'id' });
@@ -71,5 +77,6 @@ module.exports = {
 	packageWeatherModel,
 	packageImagesModel,
 	tripRequestModel,
-	tripsOrdersModel
+	tripsOrdersModel,
+	hospitalModel
 }

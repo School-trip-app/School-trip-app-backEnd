@@ -1,6 +1,6 @@
 'use strict';
 
-const { packageModel, packageWeatherModel, packageImagesModel, tripsOrdersModel, UserModel, photographerModel, hospitalModel } = require('../models');
+const { packageModel, packageWeatherModel, packageImagesModel, tripsOrdersModel, UserModel, photographerModel, hospitalModel, productModel } = require('../models');
 const express = require('express');
 const router = express.Router();
 const axios = require('axios');
@@ -16,6 +16,8 @@ router.put('/package/rate/:id', updateRate);
 
 router.post('/package/order/:userId/:packageId/:photographerId', orderPackage);
 router.get('/package/order', getOrders);
+router.get('/package/order/:id', selectOrder);
+
 router.delete('/package/order/:id', deleteOrder);
 
 //========================================================== Handlers ==========================================================//
@@ -160,10 +162,13 @@ async function orderPackage(req, res, next) {
     const Order = {
       userId: req.params.userId,
       packageId: req.params.packageId,
+      // productId:req.params.productId,
       photographerId: req.params.photographerId,
       notes: req.body.notes,
       medicalIssues: req.body.medicalIssues,
       specialFood: req.body.specialFood,
+      productIds:req.body.productIds
+
     }
     tripsOrdersModel.create(Order)
       .then(resolve => { res.status(201).send(`Order sent`) })
@@ -193,7 +198,22 @@ async function deleteOrder(req, res, next) {
   }
 }
 
+async function selectOrder(req,res){
+  try {
+    const id = req.params.id;
+    const chooseOrder= await tripsOrdersModel.findOne({where:{id},include:[packageModel, UserModel, photographerModel]});
 
+    let arrayOrder = chooseOrder.productIds
+    const products = await productModel.findAll({where:{id:arrayOrder}});
+
+    res.status(200).json({
+      chooseOrder,
+      products
+    });
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 
 

@@ -19,12 +19,12 @@ const { createPhotographer } = require('./photographer.model');
 const POSTGRES_URL = process.env.DATABASE_URL;
 
 const sequelizeOption = {
-	// dialectOptions: {
-	// 	ssl: {
-	// 		require: true,
-	// 		rejectUnauthorized: false
-	// 	}
-	// }
+	dialectOptions: {
+		ssl: {
+			require: true,
+			rejectUnauthorized: false
+		}
+	}
 }
 
 let sequelize = new Sequelize(POSTGRES_URL, sequelizeOption);
@@ -71,14 +71,22 @@ tripsOrdersModel.belongsTo(UserModel, { forignKey: 'userId', targetKey: 'id' });
 packageModel.hasMany(tripsOrdersModel, { forignKey: 'packageId', primaryKey: 'id' });
 tripsOrdersModel.belongsTo(packageModel, { forignKey: 'packageId', targetKey: 'id' });
 
-productModel.hasMany(productOrderModel, { forignKey: 'productId', primaryKey: 'id' });
-productOrderModel.belongsTo(productModel, { forignKey: 'productId', targetKey: 'id' });
+
+// productModel.hasMany(productOrderModel, { forignKey: 'productId', primaryKey: 'id' });
+// productOrderModel.belongsTo(productModel, { forignKey: 'productId', targetKey: 'id' });
 
 photographerModel.hasOne(tripsOrdersModel, { forignKey: 'photographerId', primaryKey: 'id' });
 tripsOrdersModel.belongsTo(photographerModel, { forignKey: 'photographerId', targetKey: 'id' });
 
+// tripsOrdersModel.hasMany(productModel, { forignKey: 'tripOrderId', primaryKey: 'id' });
+// productModel.hasMany(tripsOrdersModel,{forignKey:'tripOrderId', targetKey:'id'})
 
 
+// productOrder.hasMany(productModel,)
+// productModel.b
+
+
+// tripOrder.belongsTO(pructOrder,{})
 sequelize.authenticate()
 	.then(() => {
 		console.log('Database connected to postgres');

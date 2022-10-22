@@ -1,6 +1,6 @@
 'use strict';
 
-const { packageModel, packageWeatherModel, packageImagesModel, tripsOrdersModel, UserModel } = require('../models');
+const { packageModel, packageWeatherModel, packageImagesModel,hospitalModel ,  tripsOrdersModel, UserModel } = require('../models');
 const express = require('express');
 const router = express.Router();
 const axios = require('axios');
@@ -75,7 +75,7 @@ async function addPackage(req, res, next) {
 
 function getPackages(req, res, next) {
   try {
-    packageModel.findAll({ include: [packageImagesModel, packageWeatherModel] })
+    packageModel.findAll({ include: [packageImagesModel, packageWeatherModel , hospitalModel] })
       .then((resolve) => {
         res.status(200).send(resolve);
       })

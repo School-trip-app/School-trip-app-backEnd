@@ -12,6 +12,7 @@ const packageImagesRouter = require('./routes/packageImages.route');
 const tripRequestRouter = require('./routes/tripRequest.route');
 const memoryRouter = require('./routes/memory.route');
 const commentRouter = require('./routes/comment.route');
+const hospitalRouter = require('./routes/hospital.route');
 // const stripe = require("./routes/payment");
 
 
@@ -27,6 +28,7 @@ app.use(packageImagesRouter);
 app.use(tripRequestRouter);
 app.use(memoryRouter);
 app.use(commentRouter);
+app.use(hospitalRouter);
 
 app.use(notFound);
 app.use(internalError);

@@ -36,12 +36,12 @@ const memoriesModel = createMemoriesTable(sequelize, DataTypes);
 const packageModel = createPackageTable(sequelize, DataTypes);
 const packageWeatherModel = createPackageWeatherTable(sequelize, DataTypes);
 const packageImagesModel = createPackageImagesTable(sequelize, DataTypes);
-const tripRequestModel = createTripRequestTable(sequelize, DataTypes);
 const tripsOrdersModel = createTripsOrderTable(sequelize, DataTypes);
 const productModel = createProductTable(sequelize, DataTypes);
 const productOrderModel = createProductOrderTable(sequelize, DataTypes);
 const hospitalModel = createHospitalTable(sequelize, DataTypes);
 const photographerModel = createPhotographer(sequelize, DataTypes);
+// const tripRequestModel = createTripRequestTable(sequelize, DataTypes);
 
 
 packageModel.hasOne(packageWeatherModel, { forignKey: 'packageId', primaryKey: 'id' });
@@ -65,8 +65,8 @@ commentModel.belongsTo(memoriesModel, { forignKey: 'memoryId', targetKey: 'id' }
 UserModel.hasMany(tripsOrdersModel, { forignKey: 'userId', primaryKey: 'id' });
 tripsOrdersModel.belongsTo(UserModel, { forignKey: 'userId', targetKey: 'id' });
 
-UserModel.hasMany(productOrderModel, { forignKey: 'productId', primaryKey: 'id' });
-productOrderModel.belongsTo(UserModel, { forignKey: 'productId', targetKey: 'id' });
+// UserModel.hasMany(productOrderModel, { forignKey: 'productId', primaryKey: 'id' });
+// productOrderModel.belongsTo(UserModel, { forignKey: 'productId', targetKey: 'id' });
 
 packageModel.hasMany(tripsOrdersModel, { forignKey: 'packageId', primaryKey: 'id' });
 tripsOrdersModel.belongsTo(packageModel, { forignKey: 'packageId', targetKey: 'id' });
@@ -95,7 +95,7 @@ module.exports = {
 	packageModel,
 	packageWeatherModel,
 	packageImagesModel,
-	tripRequestModel,
+	// tripRequestModel,
 	tripsOrdersModel,
 	productModel,
 	productOrderModel,

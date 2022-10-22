@@ -1,33 +1,29 @@
-'use strict' ;
+'use strict';
 const express = require('express');
 const app = express();
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 require('dotenv').config();
 const router = express.Router();
 
-router.post(/payment/, async (req, res) => {
-  let {amount, id} = req.body;
-  try {
 
-    const payment = await stripe.paymentIntents.create({
-      amount,
-      currency: "USD",
-      description: "Journey",
-      payment_method: id,
-      confirm: true
+router.post('/payment', async function (req, res, next) {
+  let paymentMethod = await stripe.paymentMethods.create({
+    type: 'card',
+    card: {
+      number: '4242424242424242',
+      exp_month: 9,
+      exp_year: 2022,
+      cvc: '314',
+    },
+  });
+  paymentIntent = await stripe.paymentIntents.create({
+    payment_method: paymentMethod.id,
+    amount: 75 * 100, // USD*100
+    currency: 'inr',
+    confirm: true,
+    payment_method_types: ['card'],
+  });
 
-    })
-    console.log("Payment", payment);
-    res.json({
-      message: "Payment successful",
-      success: true
-    })
-  } catch (error) {
-    console.log("Error", error);
-    res.json({
-      message: "Payment failed",
-      success: false
-    })
-  }
-})
- module.exports = router;
+  res.send(paymentIntent);
+});
+module.exports = router;

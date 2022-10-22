@@ -8,7 +8,7 @@ const path = require('path');
 
 const { UserModel } = require('../models');
 const { checkUser } = require('../middlewares/userCheck');
-const bearerAuth=require('../middlewares/bearerAuth');
+const bearerAuth = require('../middlewares/bearerAuth');
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -24,10 +24,10 @@ const upload = multer({
     limits: { fileSize: '1000000' },
     fileFilter: (req, file, cb) => {
         const fileTypes = /jpeg|jpg|png|gif/
-        const mimeType = fileTypes.test(file.mimetype)  
+        const mimeType = fileTypes.test(file.mimetype)
         const extname = fileTypes.test(path.extname(file.originalname))
 
-        if(mimeType && extname) {
+        if (mimeType && extname) {
             return cb(null, true)
         }
         cb('Give proper files formate to upload')
@@ -38,20 +38,20 @@ const upload = multer({
 const createnewUser = async (req, res) => {
     try {
         const userInfo = req.body;
-        let  newUser={}
-        if(userInfo.userRole=='school'){
-            newUser= {
+        let newUser = {}
+        if (userInfo.userRole == 'school') {
+            newUser = {
                 username: userInfo.username,
                 email: userInfo.email,
                 password: await bcrypt.hash(userInfo.password, 12),
                 userRole: userInfo.userRole,
                 phonenumber: userInfo.phonenumber,
                 gender: userInfo.gender,
-                image:req.file.path
+                image: req.file.path
             };
         }
-        else{
-            newUser= {
+        else {
+            newUser = {
                 username: userInfo.username,
                 email: userInfo.email,
                 password: await bcrypt.hash(userInfo.password, 12),
@@ -60,7 +60,7 @@ const createnewUser = async (req, res) => {
                 gender: userInfo.gender,
             };
         }
-        
+
         const user = await UserModel.create(newUser);
         if (user) res.status(201).json(user);
     }
@@ -70,7 +70,7 @@ const createnewUser = async (req, res) => {
 
     }
 }
-router.post('/user',upload,checkUser, createnewUser);
+router.post('/user', upload, checkUser, createnewUser);
 
 const signIN = async (req, res) => {
     try {
@@ -110,23 +110,23 @@ const getAllUsers = async (req, res) => {
     }
 }
 
-router.get('/users',getAllUsers);
+router.get('/users', getAllUsers);
 
-const updateCaplities = async (req,res)=>{
+const updateCaplities = async (req, res) => {
     try {
-        const id=req.params.id;
-        const user=await UserModel.findOne({where:{id}});
-       await user.update({
-            userRole:'enabledSchool'
+        const id = req.params.id;
+        const user = await UserModel.findOne({ where: { id } });
+        await user.update({
+            userRole: 'enabledSchool'
         });
         res.status(200).send(user);
-         
+
     } catch (error) {
         console.log(error);
     }
 }
 
-router.put('/user/:id',updateCaplities)
+router.put('/user/:id', updateCaplities)
 
 
 module.exports = router;

@@ -1,9 +1,10 @@
 'use strict';
 
-const { packageModel, packageWeatherModel, packageImagesModel, tripsOrdersModel, UserModel } = require('../models');
+const { packageModel, packageWeatherModel, packageImagesModel, tripsOrdersModel, UserModel, photographerModel, hospitalModel } = require('../models');
 const express = require('express');
 const router = express.Router();
 const axios = require('axios');
+const { resolve } = require('path');
 
 //========================================================== Routes ==========================================================//
 
@@ -13,7 +14,7 @@ router.put('/package/:id', updatePackage);
 router.delete('/package/:id', deletePackage);
 router.put('/package/rate/:id', updateRate);
 
-router.post('/package/order/:userId/:packageId', orderPackage);
+router.post('/package/order/:userId/:packageId/:photographerId', orderPackage);
 router.get('/package/order', getOrders);
 router.delete('/package/order/:id', deleteOrder);
 
@@ -52,9 +53,30 @@ async function addPackage(req, res, next) {
                 .then(packageImage => { })
                 .catch(reject => res.status(501).send(`cant create an image :${reject}`));
             })
-            res.status(201).send('Successfully Created')
           })
-          .catch(err => console.log(err));
+          .catch(reject => res.status(501).send(`cant create images :${reject}`));
+        // axios.get(`https://nearby-places.p.rapidapi.com/v2/nearby?type=Hospital&lat=${req.body.locationLat}&lng=${req.body.locationLon}&radius=50000`, {
+        //   headers: {
+        //     'X-RapidAPI-Key': 'd3c907fc37mshb3266e92a8fad15p16e2fajsn1182d2713ad8',
+        //     'X-RapidAPI-Host': 'nearby-places.p.rapidapi.com'
+        //   }
+        // })
+        //   .then(resolve => {
+        //     resolve.data.results.map(hospital => {
+        //       const obj = {
+        //         packageId: createdPackage.id,
+        //         name: hospital.name,
+        //         address: hospital.address,
+        //         phone: hospital.phone,
+        //         distanceMeter: hospital.distanceMeter,
+        //       }
+        //       hospitalModel.create(obj)
+        //         .then(packageWeather => { })
+        //         .catch(reject => res.status(501).send(`cant create hospitals :${reject}`));
+        //     })
+        //   })
+        //   .catch(reject => res.status(501).send(`cant get hospitals info :${reject}`))
+        res.status(200).send('Package Created Successfuly');
       })
       .catch(reject => { res.status(501).send(`cant create a package :${reject}`) });
   } catch (err) {
@@ -64,7 +86,7 @@ async function addPackage(req, res, next) {
 
 function getPackages(req, res, next) {
   try {
-    packageModel.findAll({ include: [packageImagesModel, packageWeatherModel] })
+    packageModel.findAll({ include: [packageImagesModel, packageWeatherModel, hospitalModel] })
       .then((resolve) => {
         res.status(200).send(resolve);
       })
@@ -119,16 +141,15 @@ function deletePackage(req, res, next) {
 
 async function updateRate(req, res, next) {
   try {
-    const packagee = await packageModel.findOne({ where: { id: req.params.id } });
-
-    // make avarige of the rate and update the package by math logic
-    const newretaPoints = (packagee.ratePoints + req.body.ratePoints);
-    const newratePeople = (packagee.ratePeople + 1);
-    const newRate = (newretaPoints / newratePeople);
-
-    packageModel.update({ rate: `${newRate}`, ratePeople: newratePeople, ratePoints: newretaPoints }, { where: { id: req.params.id } })
-      .then(resolve => { res.status(200).send('rate updated') })
-      .catch(reject => { console.log(`${reject}`) });
+    const id = req.params.id;
+    const rateInput = req.body.rateInput;
+    const pack = await packageModel.findOne({ where: { id } });
+    pack.update({
+      ratesNumber: (pack.ratesNumber + 1),
+      ratePoints: pack.ratePoints + rateInput,
+      rate: pack.ratePoints / pack.ratesNumber,
+    });
+    res.status(200).send(pack);
   } catch (err) {
     next(`Error inside updateRate function : ${err}`);
   }
@@ -139,7 +160,10 @@ async function orderPackage(req, res, next) {
     const Order = {
       userId: req.params.userId,
       packageId: req.params.packageId,
+      photographerId: req.params.photographerId,
       notes: req.body.notes,
+      medicalIssues: req.body.medicalIssues,
+      specialFood: req.body.specialFood,
     }
     tripsOrdersModel.create(Order)
       .then(resolve => { res.status(201).send(`Order sent`) })
@@ -151,7 +175,7 @@ async function orderPackage(req, res, next) {
 
 async function getOrders(req, res, next) {
   try {
-    tripsOrdersModel.findAll({ include: [packageModel, UserModel] })
+    tripsOrdersModel.findAll({ include: [packageModel, UserModel, photographerModel] })
       .then(resolve => { res.status(201).send(resolve) })
       .catch(reject => { res.status(403).send(`Cannot update : ${reject}`) });
   } catch (err) {

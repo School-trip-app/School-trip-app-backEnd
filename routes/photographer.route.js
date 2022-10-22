@@ -14,6 +14,7 @@ const addPhotographer = async (req, res) => {
             phoneNumber: info.phoneNumber,
             rate: info.rate,
             totalRate: info.rate,
+            price: info.price,
         }
         const photographer = await photographerModel.create(newPhotographer);
         res.status(200).send(photographer);
@@ -35,7 +36,7 @@ const getAllPhotgraphers = async (req, res) => {
     }
 }
 
-router.get('/photographers', getAllPhotgraphers);
+router.get('/photographer', getAllPhotgraphers);
 const putRate = async (req, res) => {
     try {
         const id = req.params.id;

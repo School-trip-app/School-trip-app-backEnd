@@ -1,6 +1,10 @@
 'use strict';
 
+
 const { packageModel, packageWeatherModel, packageImagesModel, tripsOrdersModel, UserModel, photographerModel, hospitalModel, productModel } = require('../models');
+
+const { packageModel, packageWeatherModel, packageImagesModel, tripsOrdersModel, UserModel, photographerModel } = require('../models');
+
 const express = require('express');
 const router = express.Router();
 const axios = require('axios');

@@ -5,6 +5,7 @@ function createTripsOrderTable(sequelize, DataTypes) {
     sequelize.define("tripOrder", {
       userId: { type: DataTypes.INTEGER, allowNull: false },
       packageId: { type: DataTypes.INTEGER, allowNull: false },
+
       productIds:{type:DataTypes.ARRAY(DataTypes.INTEGER), allowNull:true},  
       photographerId: { type: DataTypes.INTEGER, allowNull: true },
       medicalIssues: { type: DataTypes.STRING },
@@ -13,6 +14,12 @@ function createTripsOrderTable(sequelize, DataTypes) {
       totalPric:{
         type:DataTypes.INTEGER,
         defaultValue:0
+
+      notes: { type: DataTypes.STRING },
+      photogerId:{
+        type:DataTypes.INTEGER,
+        allowNull:false
+
       }
     })
   )

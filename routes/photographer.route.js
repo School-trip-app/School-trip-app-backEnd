@@ -58,8 +58,18 @@ const putRate = async (req, res) => {
     }
 }
 
-
 router.put('/photographer/:id', putRate);
+
+const deleteallPhotographer = async (req, res) => {
+    try {
+        await photographerModel.destroy({ where: {} });
+        res.status(200).send('all photographers deleted');
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+router.delete('/photographer', deleteallPhotographer);
 
 
 

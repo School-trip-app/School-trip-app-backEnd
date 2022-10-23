@@ -50,4 +50,5 @@ const start = (port) => {
 
 module.exports = {
   start,
+  app,
 }

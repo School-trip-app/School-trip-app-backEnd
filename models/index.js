@@ -3,21 +3,6 @@ require('dotenv').config();
 
 const { Sequelize, DataTypes } = require('sequelize');
 
-const User = require('./user');
-const { createCommentTable } = require("./comment.model");
-const { createMemoriesTable } = require("./memories.model");
-const { createPackageTable } = require("./package.model");
-const { createPackageWeatherTable } = require("./packageWeather.model");
-const { createPackageImagesTable } = require("./packageImages.model");
-const { createTripRequestTable } = require("./tripRequest.model");
-const { createTripsOrderTable } = require('./tripsOrders.model');
-const { createHospitalTable } = require('./hospital.model');
-const { createProductTable } = require('./product.model');
-const { createProductOrderTable } = require('./productOrder.model');
-const { createPhotographer } = require('./photographer.model');
-
-const POSTGRES_URL = process.env.DATABASE_URL;
-
 const sequelizeOption = {
 	dialectOptions: {
 		ssl: {
@@ -26,22 +11,21 @@ const sequelizeOption = {
 		}
 	}
 }
+const POSTGRES_URL = process.env.DATABASE_URL;
 
 let sequelize = new Sequelize(POSTGRES_URL, sequelizeOption);
 
-
-const UserModel = User(sequelize, DataTypes);
-const commentModel = createCommentTable(sequelize, DataTypes);
-const memoriesModel = createMemoriesTable(sequelize, DataTypes);
-const packageModel = createPackageTable(sequelize, DataTypes);
-const packageWeatherModel = createPackageWeatherTable(sequelize, DataTypes);
-const packageImagesModel = createPackageImagesTable(sequelize, DataTypes);
-const tripsOrdersModel = createTripsOrderTable(sequelize, DataTypes);
-const productModel = createProductTable(sequelize, DataTypes);
-const productOrderModel = createProductOrderTable(sequelize, DataTypes);
-const hospitalModel = createHospitalTable(sequelize, DataTypes);
-const photographerModel = createPhotographer(sequelize, DataTypes);
-const tripRequestModel = createTripRequestTable(sequelize, DataTypes);
+const UserModel = require('./user')(sequelize, DataTypes);
+const commentModel = require("./comment.model")(sequelize, DataTypes);
+const memoriesModel = require("./memories.model")(sequelize, DataTypes);
+const packageModel = require("./package.model")(sequelize, DataTypes);
+const packageWeatherModel = require("./packageWeather.model")(sequelize, DataTypes);
+const packageImagesModel = require("./packageImages.model")(sequelize, DataTypes);
+const tripRequestModel = require("./tripRequest.model")(sequelize, DataTypes);
+const tripsOrdersModel = require('./tripsOrders.model')(sequelize, DataTypes);
+const hospitalModel = require('./hospital.model')(sequelize, DataTypes);
+const productModel = require('./product.model')(sequelize, DataTypes);
+const photographerModel = require('./photographer.model')(sequelize, DataTypes);
 
 
 packageModel.hasOne(packageWeatherModel, { forignKey: 'packageId', primaryKey: 'id' });
@@ -65,23 +49,14 @@ commentModel.belongsTo(memoriesModel, { forignKey: 'memoryId', targetKey: 'id' }
 UserModel.hasMany(tripsOrdersModel, { forignKey: 'userId', primaryKey: 'id' });
 tripsOrdersModel.belongsTo(UserModel, { forignKey: 'userId', targetKey: 'id' });
 
-// UserModel.hasMany(productOrderModel, { forignKey: 'productId', primaryKey: 'id' });
-// productOrderModel.belongsTo(UserModel, { forignKey: 'productId', targetKey: 'id' });
-
 packageModel.hasMany(tripsOrdersModel, { forignKey: 'packageId', primaryKey: 'id' });
 tripsOrdersModel.belongsTo(packageModel, { forignKey: 'packageId', targetKey: 'id' });
-
-
-// productModel.hasMany(productOrderModel, { forignKey: 'productId', primaryKey: 'id' });
-// productOrderModel.belongsTo(productModel, { forignKey: 'productId', targetKey: 'id' });
 
 photographerModel.hasOne(tripsOrdersModel, { forignKey: 'photographerId', primaryKey: 'id' });
 tripsOrdersModel.belongsTo(photographerModel, { forignKey: 'photographerId', targetKey: 'id' });
 
-// tripsOrdersModel.hasMany(productModel, { forignKey: 'tripOrderId', primaryKey: 'id' });
-// productModel.hasMany(tripsOrdersModel,{forignKey:'tripOrderId', targetKey:'id'})
-UserModel.hasMany(tripRequestModel,{forignKey:'requestId',sourceId:'id'});
-tripRequestModel.belongsTo(UserModel,{forignKey:'requestId', targetKey:'id'});
+UserModel.hasMany(tripRequestModel,{forignKey:'userId',sourceId:'id'});
+tripRequestModel.belongsTo(UserModel,{forignKey:'userId', targetKey:'id'});
 
 
 sequelize.authenticate()
@@ -103,7 +78,6 @@ module.exports = {
 	tripRequestModel,
 	tripsOrdersModel,
 	productModel,
-	productOrderModel,
 	photographerModel,
 	hospitalModel
 }

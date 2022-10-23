@@ -19,12 +19,12 @@ const { createPhotographer } = require('./photographer.model');
 const POSTGRES_URL = process.env.DATABASE_URL;
 
 const sequelizeOption = {
-	dialectOptions: {
-		ssl: {
-			require: true,
-			rejectUnauthorized: false
-		}
-	}
+	// dialectOptions: {
+	// 	ssl: {
+	// 		require: true,
+	// 		rejectUnauthorized: false
+	// 	}
+	// }
 }
 
 let sequelize = new Sequelize(POSTGRES_URL, sequelizeOption);
@@ -80,8 +80,9 @@ tripsOrdersModel.belongsTo(photographerModel, { forignKey: 'photographerId', tar
 
 // tripsOrdersModel.hasMany(productModel, { forignKey: 'tripOrderId', primaryKey: 'id' });
 // productModel.hasMany(tripsOrdersModel,{forignKey:'tripOrderId', targetKey:'id'})
-UserModel.hasMany(tripRequestModel,{forignKey:'requestId',sourceId:'id'});
-tripRequestModel.belongsTo(UserModel,{forignKey:'requestId', targetKey:'id'});
+
+UserModel.hasMany(tripRequestModel, { forignKey: 'userId', sourceId: 'id' });
+tripRequestModel.belongsTo(UserModel, { forignKey: 'userId', targetKey: 'id' });
 
 
 sequelize.authenticate()

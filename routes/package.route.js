@@ -57,27 +57,27 @@ async function addPackage(req, res, next) {
             })
           })
           .catch(reject => res.status(501).send(`cant create images :${reject}`));
-        // axios.get(`https://nearby-places.p.rapidapi.com/v2/nearby?type=Hospital&lat=${req.body.locationLat}&lng=${req.body.locationLon}&radius=50000`, {
-        //   headers: {
-        //     'X-RapidAPI-Key': 'd3c907fc37mshb3266e92a8fad15p16e2fajsn1182d2713ad8',
-        //     'X-RapidAPI-Host': 'nearby-places.p.rapidapi.com'
-        //   }
-        // })
-        //   .then(resolve => {
-        //     resolve.data.results.map(hospital => {
-        //       const obj = {
-        //         packageId: createdPackage.id,
-        //         name: hospital.name,
-        //         address: hospital.address,
-        //         phone: hospital.phone,
-        //         distanceMeter: hospital.distanceMeter,
-        //       }
-        //       hospitalModel.create(obj)
-        //         .then(packageWeather => { })
-        //         .catch(reject => res.status(501).send(`cant create hospitals :${reject}`));
-        //     })
-        //   })
-        //   .catch(reject => res.status(501).send(`cant get hospitals info :${reject}`))
+        axios.get(`https://nearby-places.p.rapidapi.com/v2/nearby?type=Hospital&lat=${req.body.locationLat}&lng=${req.body.locationLon}&radius=50000`, {
+          headers: {
+            'X-RapidAPI-Key': 'd3c907fc37mshb3266e92a8fad15p16e2fajsn1182d2713ad8',
+            'X-RapidAPI-Host': 'nearby-places.p.rapidapi.com'
+          }
+        })
+          .then(resolve => {
+            resolve.data.results.map(hospital => {
+              const obj = {
+                packageId: createdPackage.id,
+                name: hospital.name,
+                address: hospital.address,
+                phone: hospital.phone,
+                distanceMeter: hospital.distanceMeter,
+              }
+              hospitalModel.create(obj)
+                .then(packageWeather => { })
+                .catch(reject => res.status(501).send(`cant create hospitals :${reject}`));
+            })
+          })
+          .catch(reject => res.status(501).send(`cant get hospitals info :${reject}`))
         res.status(200).send('Package Created Successfuly');
       })
       .catch(reject => { res.status(501).send(`cant create a package :${reject}`) });
@@ -162,7 +162,6 @@ async function orderPackage(req, res, next) {
     const Order = {
       userId: req.params.userId,
       packageId: req.params.packageId,
-      // productId:req.params.productId,
       photographerId: req.params.photographerId,
       notes: req.body.notes,
       medicalIssues: req.body.medicalIssues,
@@ -208,7 +207,7 @@ async function selectOrder(req, res) {
     let arrayOrder = chooseOrder.productIds
     const products = await productModel.findAll({ where: { id: arrayOrder } });
     let productPrice = products.reduce((acc, curr) => acc.price + curr.price);
-    
+
     chooseOrder.update({
       totalPric: pricePackage + pricePhotoger + productPrice
     });

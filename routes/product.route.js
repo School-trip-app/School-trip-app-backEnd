@@ -22,7 +22,7 @@ function addProduct(req, res, next) {
 
 async function getProduct(req, res, next) {
   try {
-    await productModel.findAll({include:[productOrderModel]})
+    await productModel.findAll()
       .then(resolve => { res.status(200).send(resolve) })
       .catch(reject => { res.status(306).send(reject) });
   } catch (err) {

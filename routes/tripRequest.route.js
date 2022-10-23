@@ -10,8 +10,6 @@ router.put('/tripRequest/:id', updateTripRequest);
 router.delete('/tripRequest/:id', deleteTripRequest);
 
 function addTripRequest(req, res, next) {
-  /*body :{"place":"string", "date":"string","numberOfStudents":"integer",
-  "contactMethod":"string","otherDetails":"string"}*/
   try {
     tripRequestModel.create(req.body)
       .then(resolve => { res.status(201).send(resolve) })
@@ -46,7 +44,7 @@ function updateTripRequest(req, res, next) {
 function deleteTripRequest(req, res, next) {
   try {
     tripRequestModel.destroy({ where: { id: req.params.id } })
-      .then((resolve) => { res.status(202).send(resolve) })
+      .then((resolve) => { res.status(202).send('deleted') })
       .catch((reject) => { console.log(reject) });
   } catch (err) {
     next(`Error inside deleteTripRequest function : ${err}`);
@@ -54,8 +52,8 @@ function deleteTripRequest(req, res, next) {
 }
 async function getUserWithRequest(req, res) {
   try {
-     const usersWithReuest=await UserModel.findAll({include:[tripRequestModel]});
-     res.status(200).json(usersWithReuest);
+    const usersWithReuest = await UserModel.findAll({ include: [tripRequestModel] });
+    res.status(200).json(usersWithReuest);
   } catch (error) {
     console.log(error);
   }

@@ -8,7 +8,7 @@ function createTripRequestTable(sequelize, DataTypes) {
       numberOfStudents: { type: DataTypes.INTEGER, allowNull: false },
       contactMethod: { type: DataTypes.STRING, allowNull: false },
       otherDetails: { type: DataTypes.STRING },
-      requestId: {
+      userId: {
         type: DataTypes.INTEGER,
         allowNull: false
       }

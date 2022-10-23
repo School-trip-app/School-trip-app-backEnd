@@ -18,7 +18,7 @@ function addComment(req, res, next) {
       comment: req.body.comment
     }
     commentModel.create(memoryData)
-      .then(resolve => { res.status(201).send('done') })
+      .then(resolve => { res.status(201).send(resolve) })
       .catch(reject => { res.status(306).send(reject) });
   } catch (err) {
     next(`Error inside addComment function : ${err}`);
@@ -40,7 +40,7 @@ function getMemoryComments(req, res, next) {
 function updateComment(req, res, next) {
   try {
     commentModel.update(req.body, { where: { id: req.params.id } })
-      .then(resolve => { res.status(200).send('updated') })
+      .then(resolve => { res.status(200).send(resolve) })
       .catch(reject => { console.log(`cannot update`) });
   } catch (err) {
     next(`Error inside updateComment function : ${err}`);

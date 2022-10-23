@@ -41,7 +41,7 @@ const productModel = createProductTable(sequelize, DataTypes);
 const productOrderModel = createProductOrderTable(sequelize, DataTypes);
 const hospitalModel = createHospitalTable(sequelize, DataTypes);
 const photographerModel = createPhotographer(sequelize, DataTypes);
-// const tripRequestModel = createTripRequestTable(sequelize, DataTypes);
+const tripRequestModel = createTripRequestTable(sequelize, DataTypes);
 
 
 packageModel.hasOne(packageWeatherModel, { forignKey: 'packageId', primaryKey: 'id' });
@@ -80,13 +80,10 @@ tripsOrdersModel.belongsTo(photographerModel, { forignKey: 'photographerId', tar
 
 // tripsOrdersModel.hasMany(productModel, { forignKey: 'tripOrderId', primaryKey: 'id' });
 // productModel.hasMany(tripsOrdersModel,{forignKey:'tripOrderId', targetKey:'id'})
+UserModel.hasMany(tripRequestModel,{forignKey:'requestId',sourceId:'id'});
+tripRequestModel.belongsTo(UserModel,{forignKey:'requestId', targetKey:'id'});
 
 
-// productOrder.hasMany(productModel,)
-// productModel.b
-
-
-// tripOrder.belongsTO(pructOrder,{})
 sequelize.authenticate()
 	.then(() => {
 		console.log('Database connected to postgres');
@@ -103,7 +100,7 @@ module.exports = {
 	packageModel,
 	packageWeatherModel,
 	packageImagesModel,
-	// tripRequestModel,
+	tripRequestModel,
 	tripsOrdersModel,
 	productModel,
 	productOrderModel,

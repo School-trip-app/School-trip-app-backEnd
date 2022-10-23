@@ -167,7 +167,7 @@ async function orderPackage(req, res, next) {
       notes: req.body.notes,
       medicalIssues: req.body.medicalIssues,
       specialFood: req.body.specialFood,
-      productIds:req.body.productIds
+      productIds: req.body.productIds
 
     }
     tripsOrdersModel.create(Order)
@@ -198,13 +198,21 @@ async function deleteOrder(req, res, next) {
   }
 }
 
-async function selectOrder(req,res){
+async function selectOrder(req, res) {
   try {
     const id = req.params.id;
-    const chooseOrder= await tripsOrdersModel.findOne({where:{id},include:[packageModel, UserModel, photographerModel]});
+    const chooseOrder = await tripsOrdersModel.findOne({ where: { id }, include: [packageModel, UserModel, photographerModel] });
+    let pricePackage = chooseOrder.package.price;
+    let pricePhotoger = chooseOrder.photographer.price;
 
     let arrayOrder = chooseOrder.productIds
-    const products = await productModel.findAll({where:{id:arrayOrder}});
+    const products = await productModel.findAll({ where: { id: arrayOrder } });
+    let productPrice = products.reduce((acc, curr) => acc.price + curr.price);
+    
+    chooseOrder.update({
+      totalPric: pricePackage + pricePhotoger + productPrice
+    });
+
 
     res.status(200).json({
       chooseOrder,

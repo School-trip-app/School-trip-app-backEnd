@@ -9,7 +9,11 @@ function createTripsOrderTable(sequelize, DataTypes) {
       photographerId: { type: DataTypes.INTEGER, allowNull: true },
       medicalIssues: { type: DataTypes.STRING },
       specialFood: { type: DataTypes.STRING },
-      notes: { type: DataTypes.STRING }
+      notes: { type: DataTypes.STRING },
+      totalPric:{
+        type:DataTypes.INTEGER,
+        defaultValue:0
+      }
     })
   )
 }

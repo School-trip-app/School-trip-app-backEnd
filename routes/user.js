@@ -128,5 +128,20 @@ const updateCaplities = async (req, res) => {
 
 router.put('/user/:id', updateCaplities)
 
+const deleteUser=async(req,res)=>{
+    try {
+         const id =req.params.id;
+         const user=await UserModel.destroy({where:{id}});
+         res.status(200).json(user);
+    } catch (error) {
+        console.log(error);
+    }
+}
+router.delete('/user/:id', deleteUser)
+
+
+
+
+
 
 module.exports = router;

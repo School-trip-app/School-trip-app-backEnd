@@ -16,7 +16,7 @@ function createPackageTable(sequelize, DataTypes) {
 			numberOfPeople: { type: DataTypes.INTEGER, allowNull: false },
 			startingTime: { type: DataTypes.STRING, allowNull: false },
 			endingTime: { type: DataTypes.STRING, allowNull: false },
-			price: { type: DataTypes.STRING, allowNull: false },
+			price: { type: DataTypes.INTEGER, allowNull: false },
 			meals: { type: DataTypes.STRING },
 			pickUpPoint: { type: DataTypes.STRING, allowNull: false },
 			dropPoint: { type: DataTypes.STRING, allowNull: false },

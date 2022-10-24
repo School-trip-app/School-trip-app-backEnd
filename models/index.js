@@ -4,12 +4,12 @@ require('dotenv').config();
 const { Sequelize, DataTypes } = require('sequelize');
 
 const sequelizeOption = {
-	dialectOptions: {
-		ssl: {
-			require: true,
-			rejectUnauthorized: false
-		}
-	}
+	// dialectOptions: {
+	// 	ssl: {
+	// 		require: true,
+	// 		rejectUnauthorized: false
+	// 	}
+	// }
 }
 const POSTGRES_URL = process.env.DATABASE_URL;
 

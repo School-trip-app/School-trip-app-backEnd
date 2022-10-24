@@ -6,7 +6,14 @@ const { memoriesModel, commentModel, UserModel } = require('../models');
 async function addMemory(req, res, next) {
   //body:{"userId":"integer","imageUrl":"string","discription":"string","likes":"integer","dislikes":"integer"}
   try {
-    await memoriesModel.create(req.body)
+    const memoryData={
+      userId:req.params.userId,
+      imageUrl:req.body.imageUrl,
+      discription:req.body.discription,
+      likes:req.body.likes,
+      dislikes:req.body.dislikes
+    }
+    await memoriesModel.create(memoryData)
       .then(resolve => { res.status(201).send(resolve) })
       .catch(reject => { res.status(306).send(reject) });
   } catch (err) {
@@ -20,7 +27,7 @@ async function getMemorys(req, res, next) {
       .then((resolve) => {
         res.status(200).send(resolve);
       })
-      .catch((reject) => { console.log('no data') });
+      .catch((reject) => { console.log(reject) });
   } catch (err) {
     next(`Error inside getMemorys function : ${err}`);
   }
@@ -29,8 +36,8 @@ async function getMemorys(req, res, next) {
 async function updateMemory(req, res, next) {
   try {
     await memoriesModel.update(req.body, { where: { id: req.params.id } })
-      .then(resolve => { res.status(200).send('updated') })
-      .catch(reject => { console.log(`cannot update`) });
+      .then(resolve => { res.status(200).send(resolve) })
+      .catch(reject => { console.log(reject) });
   } catch (err) {
     next(`Error inside updateMemory function : ${err}`);
   }
@@ -39,8 +46,8 @@ async function updateMemory(req, res, next) {
 async function deleteMemory(req, res, next) {
   try {
     await memoriesModel.destroy({ where: { id: req.params.id } })
-      .then((resolve) => { res.status(202).send(`deleted`) })
-      .catch((reject) => { console.log('Cant Delete') });
+      .then((resolve) => { res.status(202).end(); })
+      .catch((reject) => { console.log(reject) });
   } catch (err) {
     next(`Error inside deleteMemory function : ${err}`);
   }
@@ -51,8 +58,8 @@ async function updateLike(req, res, next) {
     const memory = await memoriesModel.findOne({ where: { id: req.params.id } })
     const likes = memory.likes + 1 ;
     await memoriesModel.update({likes: likes}, { where: { id: req.params.id } })
-      .then(resolve => { res.status(200).send('updated') })
-      .catch(reject => { console.log(`cannot update`) });
+      .then(resolve => { res.status(200).send(resolve) })
+      .catch(reject => { console.log(reject) });
   } catch (err) {
     next(`Error inside updateLike function : ${err}`);
   }
@@ -62,8 +69,8 @@ async function updateDislike(req, res, next) {
     const memory = await memoriesModel.findOne({ where: { id: req.params.id } })
     const dislikes = memory.dislikes + 1 ;
     await memoriesModel.update({dislikes: dislikes}, { where: { id: req.params.id } })
-      .then(resolve => { res.status(200).send('updated') })
-      .catch(reject => { console.log(`cannot update`) });
+      .then(resolve => { res.status(200).send(resolve) })
+      .catch(reject => { console.log(reject) });
   } catch (err) {
     next(`Error inside updateDislike function : ${err}`);
   }

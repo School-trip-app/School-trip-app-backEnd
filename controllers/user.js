@@ -97,11 +97,11 @@ const updateCaplities = async (req, res) => {
 }
 
 
-const deleteUser=async(req,res)=>{
+const deleteUser = async (req, res) => {
     try {
-         const id =req.params.id;
-         const user=await UserModel.destroy({where:{id}});
-         res.status(200).json(user);
+        const id = req.params.id;
+        await UserModel.destroy({ where: { id } });
+        res.status(202).end();
     } catch (error) {
         console.log(error);
     }

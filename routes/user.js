@@ -54,6 +54,4 @@ router.delete('/user/:id', deleteUser)
 
 
 
-
-
 module.exports = router;

@@ -14,7 +14,7 @@ const server = require('./server');
 // app.use(bodyParser.json());
 
 
-db.sync()
+db.sync({force:true})//{force:true}
   .then(() => {
     server.start(process.env.PORT || 4000);
   }).catch((err) => console.log(err));

@@ -6,14 +6,14 @@ const { commentModel, memoriesModel, UserModel } = require('../models');
 async function addComment(req, res, next) {
     // body:{"userId":"integer","memoryId":"integer","comment":"string"}
     try {
-        const memoryData = {
+        const commentData = {
             userId: req.params.userId,
             memoryId: req.params.memoryId,
             comment: req.body.comment
         }
-        const comment = await commentModel.create(memoryData);
-        res.status(200).json(comment);
-
+        const comment = await commentModel.create(commentData)
+        .then(resolve => { res.status(201).send(resolve) })
+        .catch(reject => { res.status(306).send(reject) });
     } catch (err) {
         next(`Error inside addComment function : ${err}`);
     }
@@ -44,7 +44,7 @@ function updateComment(req, res, next) {
 function deleteComment(req, res, next) {
     try {
         commentModel.destroy({ where: { id: req.params.id } })
-            .then((resolve) => { res.status(202).send(resolve) })
+            .then((resolve) => { res.status(202).end(); })
             .catch((reject) => { console.log(reject) });
     } catch (err) {
         next(`Error inside deleteComment function : ${err}`);

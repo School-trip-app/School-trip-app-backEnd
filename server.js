@@ -10,7 +10,7 @@ const packageDetailsRouter = require('./routes/packageDetails.route');
 const packageImagesRouter = require('./routes/packageImages.route');
 const tripRequestRouter = require('./routes/tripRequest.route');
 const memoryRouter = require('./routes/memory.route');
-const comment = require('./routes/comment.route');
+const commentRouter = require('./routes/comment.route');
 const productRouter = require('./routes/product.route');
 // const stripe = require("./routes/payment");
 
@@ -30,7 +30,7 @@ app.use(packageDetailsRouter);
 app.use(packageImagesRouter);
 app.use(tripRequestRouter);
 app.use(memoryRouter);
-app.use(comment);
+app.use(commentRouter);
 
 app.use(productRouter);
 
@@ -48,4 +48,5 @@ const start = (port) => {
 
 module.exports = {
   start,
+  app
 }

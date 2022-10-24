@@ -15,7 +15,7 @@ async function addMemory(req, res, next) {
   //body:{"userId":"integer","imageUrl":"string","discription":"string","likes":"integer","dislikes":"integer"}
   try {
     await memoriesModel.create(req.body)
-      .then(resolve => { res.status(201).send('done') })
+      .then(resolve => { res.status(201).send(resolve) })
       .catch(reject => { res.status(306).send(reject) });
   } catch (err) {
     next(`Error inside addMemory function : ${err}`);

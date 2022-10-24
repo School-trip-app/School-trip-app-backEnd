@@ -5,6 +5,7 @@ const express = require('express');
 const router = express.Router();
 const axios = require('axios');
 const { resolve } = require('path');
+const { NUMBER } = require('sequelize');
 
 //========================================================== Routes ==========================================================//
 
@@ -141,17 +142,34 @@ function deletePackage(req, res, next) {
   }
 }
 
+// async function updateRate(req, res, next) {
+//   try {
+//     const id = req.params.id;
+//     const rateInput = req.body.rateInput;
+//     const pack = await packageModel.findOne({ where: { id } });
+//     pack.update({
+//       ratesNumber: (pack.ratesNumber + 1),
+//       ratePoints: pack.ratePoints + rateInput,
+//       rate: pack.ratePoints / pack.ratesNumber,
+//     });
+//     res.status(200).send(pack);
+//   } catch (err) {
+//     next(`Error inside updateRate function : ${err}`);
+//   }
+// }
+
 async function updateRate(req, res, next) {
   try {
-    const id = req.params.id;
-    const rateInput = req.body.rateInput;
-    const pack = await packageModel.findOne({ where: { id } });
-    pack.update({
-      ratesNumber: (pack.ratesNumber + 1),
-      ratePoints: pack.ratePoints + rateInput,
-      rate: pack.ratePoints / pack.ratesNumber,
-    });
-    res.status(200).send(pack);
+    const packagee = await packageModel.findOne({ where: { id: req.params.id } });
+
+    // make avarige of the rate and update the package by math logic
+    const newretaPoints = Number(packagee.ratePoints + req.body.ratePoints);
+    const newratePeople = (packagee.ratesNumber + 1);
+    const newRate = Number(newretaPoints / newratePeople);
+
+    packageModel.update({ rate:newRate, ratesNumber:newratePeople , ratePoints:newretaPoints}, { where: { id: req.params.id } })
+      .then(resolve => { res.status(200).send('rate updated') })
+      .catch(reject => { console.log(`${reject}`) });
   } catch (err) {
     next(`Error inside updateRate function : ${err}`);
   }

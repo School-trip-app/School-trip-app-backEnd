@@ -29,17 +29,9 @@ describe('photographer Route', () => {
 
 
     it('should get all photographers', async () => {
-        const response = await request.post('/photographer').send({
-            image: 'https://photographer1.jpg',
-            name: 'Ahmad',
-            email: 'test@test.com',
-            phoneNumber: '123456789',
-            rate: 5,
-            totalRate: 5,
-            price: 100,
-        });
 
         const response2 = await request.get('/photographer');
+        
         expect(response2.status).toEqual(200);
         expect(response2.body[0].image).toEqual('https://photographer1.jpg');
         expect(response2.body[0].name).toEqual('Ahmad');
@@ -48,7 +40,6 @@ describe('photographer Route', () => {
         expect(response2.body[0].rate).toEqual(5);
         expect(response2.body[0].totalRate).toEqual(5);
         expect(response2.body[0].price).toEqual(100);
-        console.log(response2.body);
     });
 
     it('should update the rate of a photographer', async () => {

@@ -8,6 +8,7 @@ const request = supertest(server.app);
 
 describe('tripRequest Route', () => {
     it('should create a new tripRequest', async () => {
+
         const respons = await request.post('/user').send({
             username: 'Ahmad',
             email: 'test@test.com',
@@ -57,6 +58,14 @@ describe('tripRequest Route', () => {
         expect(response.status).toEqual(200);
         expect(response.text).toEqual('updated');
     });
+
+    it('should get all tripRequest', async () => {
+        const response = await request.get('/tripRequest');
+        expect(response.status).toEqual(200);
+        expect(response.body[0].place).toEqual('Aqaba');
+        
+    });
+
 
     it('should get all tripRequest with user', async () => {
         const response = await request.get('/usersWithRequest');

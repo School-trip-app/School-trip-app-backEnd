@@ -11,7 +11,7 @@ app.post("/subscribe", async (req, res) => {
     const userAgent = req.get("User-Agent");
     const customer = await stripe.customers.create({
       //TODO: get user details from db or from incoming request
-      
+
       payment_method: payment_method,
       email: "rudrakshdixit@gmail.com",
       description: "Subscription",

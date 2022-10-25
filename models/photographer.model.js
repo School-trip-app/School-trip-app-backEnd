@@ -1,9 +1,8 @@
 "use strict";
 
+module.exports = (sequleize, DataTypes) => {
 
-const photographers = (sequleize, DataTypes) => {
-    const photographer = sequleize.define('phtographerTable', {
-
+    const photographerModel = sequleize.define('photographer', {
         image: {
             type: DataTypes.STRING,
             allowNull: false,
@@ -31,9 +30,12 @@ const photographers = (sequleize, DataTypes) => {
         totalRate: {
             type: DataTypes.FLOAT,
             defaultValue: 0,
+        },
+        price: {
+            type: DataTypes.INTEGER,
+            allowNull: false
         }
-    });
-    return photographer;
+    })
+    return photographerModel;
 }
 
-module.exports = photographers;

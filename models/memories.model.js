@@ -1,14 +1,16 @@
 "use strict";
 
-function createMemoriesTable(sequelize, DataTypes) {
-  return (
-    sequelize.define("memories", {
-      userId: { type: DataTypes.INTEGER, allowNull: false },
-      imageUrl: { type: DataTypes.STRING, allowNull: false },
-      discription: { type: DataTypes.STRING, allowNull: false },
-      likes: { type: DataTypes.INTEGER , defaultValue : 0 },
-      dislikes: { type: DataTypes.INTEGER , defaultValue : 0}
-    })
-  )
+module.exports = (sequelize, DataTypes) => {
+
+  const memoriesModel = sequelize.define("memories", {
+    userId: { type: DataTypes.INTEGER, allowNull: true },
+    image: {
+      type: DataTypes.STRING,
+      defaultValue: ''
+  },
+    discription: { type: DataTypes.TEXT, allowNull: true },
+    likes: { type: DataTypes.INTEGER, defaultValue: 0 },
+    dislikes: { type: DataTypes.INTEGER, defaultValue: 0 }
+  })
+  return memoriesModel;
 }
-module.exports = { createMemoriesTable };

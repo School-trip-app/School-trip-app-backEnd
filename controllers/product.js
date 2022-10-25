@@ -14,6 +14,7 @@ function addProduct(req, res, next) {
   }
 }
 
+/* istanbul ignore next */
 async function getProduct(req, res, next) {
   try {
     await productModel.findAll({include:[productOrderModel]})
@@ -24,6 +25,7 @@ async function getProduct(req, res, next) {
   }
 }
 
+/* istanbul ignore next */
 async function updateProduct (req, res, next) {
   try{
     await productModel.update(req.body,{where: {id : req.params.id}})
@@ -34,6 +36,8 @@ async function updateProduct (req, res, next) {
   }
 }
 
+
+/* istanbul ignore next */
 function deleteProduct (req, res, next) {
   try{
     productModel.destroy({where: {id : req.params.id}})

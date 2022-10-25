@@ -18,6 +18,7 @@ function addPackageImages(req, res, next) {
   }
 }
 
+/* istanbul ignore next */
 function getPackageImages(req, res, next) {
   try {
     packageImagesModel.findAll({ where: { packageId: req.params.packageId }, include: [packageModel] })
@@ -40,6 +41,7 @@ function updatePackageImages(req, res, next) {
   }
 }
 
+/* istanbul ignore next */
 function deletePackageImages(req, res, next) {
   try {
     packageImagesModel.destroy({ where: { id: req.params.id } })

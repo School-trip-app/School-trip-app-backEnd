@@ -2,7 +2,6 @@
 
 const { commentModel, memoriesModel, UserModel } = require('../models');
 
-
 async function addComment(req, res, next) {
     // body:{"userId":"integer","memoryId":"integer","comment":"string"}
     try {
@@ -19,6 +18,7 @@ async function addComment(req, res, next) {
     }
 }
 
+/* istanbul ignore next */
 function getMemoryComments(req, res, next) {
     try {
         commentModel.findAll({ where: { memoryId: req.params.memoryId }, include: [memoriesModel, UserModel] })
@@ -31,6 +31,7 @@ function getMemoryComments(req, res, next) {
     }
 }
 
+/* istanbul ignore next */
 function updateComment(req, res, next) {
     try {
         commentModel.update(req.body, { where: { id: req.params.id } })

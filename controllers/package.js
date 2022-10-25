@@ -5,7 +5,7 @@ const { packageModel, packageWeatherModel, packageImagesModel, tripsOrdersModel,
 const axios = require('axios');
 
 
-
+/* istanbul ignore next */
 async function addPackage(req, res, next) {
     try {
         let tripCityName = req.body.city;
@@ -82,6 +82,7 @@ function getPackages(req, res, next) {
     }
 }
 
+/* istanbul ignore next */
 async function updatePackage(req, res, next) {
     try {
         let packagex = await packageModel.findOne({ where: { id: req.params.id } });
@@ -125,21 +126,38 @@ function deletePackage(req, res, next) {
     }
 }
 
+// async function updateRate(req, res, next) {
+//     try {
+//         const id = req.params.id;
+//         const rateInput = req.body.rateInput;
+//         const pack = await packageModel.findOne({ where: { id } });
+//         pack.update({
+//             ratesNumber: (pack.ratesNumber + 1),
+//             ratePoints: pack.ratePoints + rateInput,
+//             rate: pack.ratePoints / pack.ratesNumber,
+//         });
+//         res.status(200).send(pack);
+//     } catch (err) {
+//         next(`Error inside updateRate function : ${err}`);
+//     }
+// }
+
 async function updateRate(req, res, next) {
     try {
-        const id = req.params.id;
-        const rateInput = req.body.rateInput;
-        const pack = await packageModel.findOne({ where: { id } });
-        pack.update({
-            ratesNumber: (pack.ratesNumber + 1),
-            ratePoints: pack.ratePoints + rateInput,
-            rate: pack.ratePoints / pack.ratesNumber,
-        });
-        res.status(200).send(pack);
+      const packagee = await packageModel.findOne({ where: { id: req.params.id } });
+  
+      // make avarige of the rate and update the package by math logic
+      const newretaPoints = Number(packagee.ratePoints + req.body.ratePoints);
+      const newratePeople = (packagee.ratesNumber + 1);
+      const newRate = Number(newretaPoints / newratePeople);
+  
+      packageModel.update({ rate:newRate, ratesNumber:newratePeople , ratePoints:newretaPoints}, { where: { id: req.params.id } })
+        .then(resolve => { res.status(200).send('rate updated') })
+        .catch(reject => { console.log(`${reject}`) });
     } catch (err) {
-        next(`Error inside updateRate function : ${err}`);
+      next(`Error inside updateRate function : ${err}`);
     }
-}
+  }
 
 async function orderPackage(req, res, next) {
     try {
@@ -172,6 +190,7 @@ async function getOrders(req, res, next) {
     }
 }
 
+/* istanbul ignore next */
 async function deleteOrder(req, res, next) {
     try {
         tripsOrdersModel.destroy({ where: { id: req.params.id } })
@@ -182,6 +201,8 @@ async function deleteOrder(req, res, next) {
     }
 }
 
+
+/* istanbul ignore next */
 async function selectOrder(req, res) {
     try {
         const id = req.params.id;

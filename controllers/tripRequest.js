@@ -29,13 +29,15 @@ function getTripRequest(req, res, next) {
 function updateTripRequest(req, res, next) {
   try {
     tripRequestModel.update(req.body, { where: { id: req.params.id } })
-      .then(resolve => { res.status(200).send(resolve) })
+      .then(resolve => { res.status(200).send('updated') })
       .catch(reject => { console.log(reject) });
   } catch (err) {
     next(`Error inside updateTripRequest function : ${err}`);
   }
 }
 
+
+/* istanbul ignore next */
 function deleteTripRequest(req, res, next) {
   try {
     tripRequestModel.destroy({ where: { id: req.params.id } })

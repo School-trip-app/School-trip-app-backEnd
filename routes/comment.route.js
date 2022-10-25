@@ -3,7 +3,7 @@
 const router = require('express').Router();
 
 const { addComment, deleteComment, getMemoryComments, updateComment } = require('../controllers/comment');
-
+/* istanbul ignore next */
 router.post('/comment/:userId/:memoryId', addComment);
 router.get('/comment/:memoryId', getMemoryComments);
 router.put('/comment/:id', updateComment);

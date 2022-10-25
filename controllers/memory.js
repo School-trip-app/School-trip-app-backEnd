@@ -21,6 +21,7 @@ async function addMemory(req, res, next) {
   }
 }
 
+/* istanbul ignore next */
 async function getMemorys(req, res, next) {
   try {
     await memoriesModel.findAll({ include: [commentModel, UserModel] })
@@ -33,6 +34,7 @@ async function getMemorys(req, res, next) {
   }
 }
 
+/* istanbul ignore next */
 async function updateMemory(req, res, next) {
   try {
     await memoriesModel.update(req.body, { where: { id: req.params.id } })
@@ -53,6 +55,7 @@ async function deleteMemory(req, res, next) {
   }
 }
 
+/* istanbul ignore next */
 async function updateLike(req, res, next) {
   try {
     const memory = await memoriesModel.findOne({ where: { id: req.params.id } })
@@ -64,6 +67,8 @@ async function updateLike(req, res, next) {
     next(`Error inside updateLike function : ${err}`);
   }
 }
+
+/* istanbul ignore next */
 async function updateDislike(req, res, next) {
   try {
     const memory = await memoriesModel.findOne({ where: { id: req.params.id } })

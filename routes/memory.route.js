@@ -7,9 +7,9 @@ const { addMemory,
   deleteMemory,
   updateLike,
   updateDislike,
-  updateMemory } = require('../controllers/memory');
+  updateMemory, upload } = require('../controllers/memory');
 
-router.post('/memory', addMemory);
+router.post('/memory', upload, addMemory);
 router.get('/memory', getMemorys);
 router.put('/memory/:id', updateMemory);
 router.delete('/memory/:id', deleteMemory);

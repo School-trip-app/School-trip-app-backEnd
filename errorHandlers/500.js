@@ -1,5 +1,6 @@
 'use strict';
 
+/* istanbul ignore next */
 
 function internalError(error, req, res, next) {
   try {

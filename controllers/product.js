@@ -3,10 +3,10 @@
 
 const { productModel, UserModel} = require('../models');
 
-function addProduct(req, res, next) {
+async function addProduct(req, res, next) {
   /*{"name":"STRING", "image":"STRING","price":"STRING","quantity":"STRING","discreption":"STRING","category":"sea"}*/
   try {
-      productModel.create(req.body)
+    await  productModel.create(req.body)
       .then(resolve => { res.status(201).send(resolve) })
       .catch(reject => { res.status(306).send(reject) });
   } catch (err) {
@@ -16,7 +16,7 @@ function addProduct(req, res, next) {
 
 async function getProduct(req, res, next) {
   try {
-    await productModel.findAll({include:[productOrderModel]})
+    await productModel.findAll()
       .then(resolve => { res.status(200).send(resolve) })
       .catch(reject => { res.status(306).send(reject) });
   } catch (err) {

@@ -59,13 +59,15 @@ module.exports = (sequleize, DataTypes) => {
         },
         imageprofile: {
             type: DataTypes.STRING,
-            get: function () {
-                const ACL = {
-                    male: 'https://i.ibb.co/FDfn81H/male.jpg',
-                    female: 'https://i.ibb.co/cyQC7J9/female.jpg',
-                }
-                return ACL[this.gender];
-            }
+            allowNull:true,
+            // defaultValue: this.gender == "male" ? 'https://i.ibb.co/FDfn81H/male.jpg' : '',
+            // get: function () {
+            //     const ACL = {
+            //         male: 'https://i.ibb.co/FDfn81H/male.jpg',
+            //         female: 'https://i.ibb.co/cyQC7J9/female.jpg',
+            //     }
+            //     return ACL[this.gender];
+            // }
         },
     });
     User.authenticateToket = (token) => {

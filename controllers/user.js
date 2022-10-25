@@ -3,14 +3,61 @@
 const bcrypt = require('bcrypt');
 const base64 = require('base-64');
 
-
+const multer = require('multer');
+const path = require('path');
 const { UserModel } = require('../models');
 
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'Images')
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + path.extname(file.originalname))
+    }
+})
+
+const upload = multer({
+    storage: storage,
+    limits: { fileSize: '1000000' },
+    fileFilter: (req, file, cb) => {
+        const fileTypes = /jpeg|jpg|png|gif/
+        const mimeType = fileTypes.test(file.mimetype)
+        const extname = fileTypes.test(path.extname(file.originalname))
+
+        if (mimeType && extname) {
+            return cb(null, true)
+        }
+        cb('Give proper files formate to upload')
+    }
+}).single('image')
 
 
+const storage2 = multer.diskStorage({
+    destination: 'Imagefile',
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + path.extname(file.originalname))
+    }
+})
+
+const upload2 = multer({
+    storage: storage2,
+    limits: { fileSize: '1000000' },
+    fileFilter: (req, file, cb) => {
+        const fileTypes = /jpeg|jpg|png|gif/
+        const mimeType = fileTypes.test(file.mimetype)
+        const extname = fileTypes.test(path.extname(file.originalname))
+
+        if (mimeType && extname) {
+            return cb(null, true)
+        }
+        cb('Give proper files formate to upload')
+    }
+}).single('image')
 const createnewUser = async (req, res) => {
     try {
+        req.body.imageprofile=req.body.gender == "male" ? 'https://i.ibb.co/FDfn81H/male.jpg' : 'https://i.ibb.co/cyQC7J9/female.jpg';
         const userInfo = req.body;
+         
         let newUser = {}
         if (userInfo.userRole == 'school') {
             newUser = {
@@ -20,7 +67,8 @@ const createnewUser = async (req, res) => {
                 userRole: userInfo.userRole,
                 phonenumber: userInfo.phonenumber,
                 gender: userInfo.gender,
-                image: req.file.path
+                image: req.file.path,
+                imageprofile: userInfo.imageprofile
             };
         }
         else {
@@ -31,6 +79,7 @@ const createnewUser = async (req, res) => {
                 userRole: userInfo.userRole,
                 phonenumber: userInfo.phonenumber,
                 gender: userInfo.gender,
+                imageprofile: userInfo.imageprofile
             };
         }
 
@@ -50,6 +99,7 @@ const signIN = async (req, res) => {
         const userInfo = req.headers.authorization.split(' ')[1];
         const decoded = base64.decode(userInfo);
         const [username, password] = decoded.split(':');
+        console.log(username,">>>>>>.", password)
         const user = await UserModel.findOne({ where: { username: username } });
         if (user) {
             const checkPassword = await bcrypt.compare(password, user.password);
@@ -97,18 +147,33 @@ const updateCaplities = async (req, res) => {
 }
 
 
-const deleteUser=async(req,res)=>{
+const deleteUser = async (req, res) => {
     try {
-         const id =req.params.id;
-         const user=await UserModel.destroy({where:{id}});
-         res.status(200).json(user);
+        const id = req.params.id;
+        const user = await UserModel.destroy({ where: { id } });
+        res.status(202).json(user);
     } catch (error) {
         console.log(error);
     }
 }
 
 
-
+const updateImageProfile = async (req, res) => {
+    try {
+        const id = req.params.id
+        const image = {
+            image:req.file.path
+        } 
+        console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",image);
+        const user = await UserModel.findOne({ where: { id } });
+        user.update({
+            imageprofile :req.file.path
+        });
+        res.status(200).json(user);
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 
 
@@ -118,5 +183,7 @@ module.exports = {
     getAllUsers,
     signIN,
     createnewUser,
-
+    upload,
+    updateImageProfile,
+    upload2
 };

@@ -130,12 +130,18 @@ async function updateRate(req, res, next) {
         const id = req.params.id;
         const rateInput = req.body.rateInput;
         const pack = await packageModel.findOne({ where: { id } });
+        console.log("RATE>>>>>>>",rateInput, pack.ratePoints,  pack.ratesNumber)
+
         pack.update({
             ratesNumber: (pack.ratesNumber + 1),
-            ratePoints: pack.ratePoints + rateInput,
-            rate: pack.ratePoints / pack.ratesNumber,
         });
-        res.status(200).send(pack);
+        pack.update({
+            ratePoints: pack.ratePoints + rateInput,
+        })
+        pack.update({
+            rate: pack.ratePoints / pack.ratesNumber,
+        })
+        res.status(200).send('rate updated');
     } catch (err) {
         next(`Error inside updateRate function : ${err}`);
     }
@@ -188,20 +194,20 @@ async function selectOrder(req, res) {
         const chooseOrder = await tripsOrdersModel.findOne({ where: { id }, include: [packageModel, UserModel, photographerModel] });
         let pricePackage = chooseOrder.package.price;
         let pricePhotoger = chooseOrder.photographer.price;
-
         let arrayOrder = chooseOrder.productIds
         const products = await productModel.findAll({ where: { id: arrayOrder } });
+
         let productPrice = products.reduce((acc, curr) => acc.price + curr.price);
+       
+            chooseOrder.update({
+                totalPric: pricePackage + pricePhotoger + productPrice
+            });
 
-        chooseOrder.update({
-            totalPric: pricePackage + pricePhotoger + productPrice
-        });
-
-
-        res.status(200).json({
-            chooseOrder,
-            products
-        });
+            res.status(200).json({
+                chooseOrder,
+                products
+            });
+        
     } catch (error) {
         console.log(error);
     }

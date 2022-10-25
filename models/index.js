@@ -26,6 +26,8 @@ const tripsOrdersModel = require('./tripsOrders.model')(sequelize, DataTypes);
 const hospitalModel = require('./hospital.model')(sequelize, DataTypes);
 const productModel = require('./product.model')(sequelize, DataTypes);
 const photographerModel = require('./photographer.model')(sequelize, DataTypes);
+const paymentDetialsModel= require('./paymentDetails.model')(sequelize, DataTypes);
+
 
 
 packageModel.hasOne(packageWeatherModel, { forignKey: 'packageId', primaryKey: 'id' });
@@ -59,6 +61,7 @@ UserModel.hasMany(tripRequestModel,{forignKey:'userId',sourceId:'id'});
 tripRequestModel.belongsTo(UserModel,{forignKey:'userId', targetKey:'id'});
 
 
+
 sequelize.authenticate()
 	.then(() => {
 		console.log('Database connected to postgres');
@@ -79,5 +82,6 @@ module.exports = {
 	tripsOrdersModel,
 	productModel,
 	photographerModel,
-	hospitalModel
+	hospitalModel,
+	paymentDetialsModel
 }

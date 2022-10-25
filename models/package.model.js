@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
 		locationName: { type: DataTypes.STRING, allowNull: false },
 		locationLat: { type: DataTypes.STRING, allowNull: false },
 		locationLon: { type: DataTypes.STRING, allowNull: false },
-		packageDiscription: { type: DataTypes.STRING, allowNull: false },
+		packageDiscription: { type: DataTypes.TEXT, allowNull: false },
 		rate: { type: DataTypes.FLOAT, allowNull: false },
 		ratePoints: { type: DataTypes.FLOAT, defaultValue: 0 },
 		ratesNumber: { type: DataTypes.INTEGER, defaultValue: 1 },

@@ -2,6 +2,7 @@
 
 const { commentModel, memoriesModel, UserModel } = require('../models');
 
+/* istanbul ignore next */
 
 async function addComment(req, res, next) {
     // body:{"userId":"integer","memoryId":"integer","comment":"string"}
@@ -18,6 +19,7 @@ async function addComment(req, res, next) {
         next(`Error inside addComment function : ${err}`);
     }
 }
+/* istanbul ignore next */
 
 function getMemoryComments(req, res, next) {
     try {
@@ -30,21 +32,23 @@ function getMemoryComments(req, res, next) {
         next(`Error inside getMemoryComments function : ${err}`);
     }
 }
+/* istanbul ignore next */
 
 function updateComment(req, res, next) {
     try {
         commentModel.update(req.body, { where: { id: req.params.id } })
-            .then(resolve => { res.status(200).send(resolve) })
+            .then(resolve => { res.status(200).send('updated') })
             .catch(reject => { console.log(reject) });
     } catch (err) {
         next(`Error inside updateComment function : ${err}`);
     }
 }
+/* istanbul ignore next */
 
 function deleteComment(req, res, next) {
     try {
         commentModel.destroy({ where: { id: req.params.id } })
-            .then((resolve) => { res.status(202).send(resolve) })
+            .then((resolve) => { res.status(202).send('deleted') })
             .catch((reject) => { console.log(reject) });
     } catch (err) {
         next(`Error inside deleteComment function : ${err}`);

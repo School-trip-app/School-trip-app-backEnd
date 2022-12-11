@@ -1,6 +1,7 @@
 const router = require('express').Router();
 
 
+<<<<<<< HEAD
 const bcrypt = require('bcrypt');
 const base64 = require('base-64');
 const { UserModel } = require('../modules/index');
@@ -20,40 +21,47 @@ const createnewUser = async (req, res) => {
         if (user) res.status(201).json(user);
     }
     catch (error) {
+=======
 
-        console.log(error);
+const { checkUser } = require('../middlewares/userCheck');
+const bearerAuth = require('../middlewares/bearerAuth');
+const { deleteUser,
+    updateCaplities,
+    getAllUsers,
+    signIN,
+    createnewUser,
+    upload, updateImageProfile, upload2} = require('../controllers/user');
 
+
+>>>>>>> f5661b980d8352283c55058b6bd5c63416a1d53c
+
+
+<<<<<<< HEAD
     }
 }
 router.post('/user', checkUser, createnewUser);
+=======
+router.post('/user', upload, checkUser, createnewUser);
+>>>>>>> f5661b980d8352283c55058b6bd5c63416a1d53c
 
-const signIN = async (req, res) => {
-    try {
 
-        const userInfo = req.headers.authorization.split(' ')[1];
-        const decoded = base64.decode(userInfo);
-        const [username, password] = decoded.split(':');
-        const user = await UserModel.findOne({ where: { username: username } });
-        if (user) {
-            const checkPassword = await bcrypt.compare(password, user.password);
-            if (checkPassword) {
-                return res.status(200).json(user);
-            }
-            else {
-                return res.status(401).json({
-                    message: "you are not allow",
-                });
-            }
-        }
-        else {
-            return res.status(401).json('your password or username is not correct');
-        }
-
-    }
-    catch (error) {
-        console.log(error);
-    }
-}
 router.post('/signin', signIN);
 
+<<<<<<< HEAD
+=======
+
+
+router.get('/user', getAllUsers);
+
+
+router.put('/user/:id', updateCaplities)
+
+
+router.delete('/user/:id', deleteUser)
+
+router.put('/users/:id', bearerAuth,upload2, updateImageProfile);
+
+
+
+>>>>>>> f5661b980d8352283c55058b6bd5c63416a1d53c
 module.exports = router;

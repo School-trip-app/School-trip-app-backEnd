@@ -13,7 +13,7 @@ const sequelizeOption = {
 }
 const POSTGRES_URL = process.env.DATABASE_URL;
 
-let sequelize = new Sequelize(POSTGRES_URL, sequelizeOption);
+let sequelize = new Sequelize(POSTGRES_URL, {sequelizeOption});
 
 const UserModel = require('./user')(sequelize, DataTypes);
 const commentModel = require("./comment.model")(sequelize, DataTypes);

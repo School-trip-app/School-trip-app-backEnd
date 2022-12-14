@@ -7,7 +7,8 @@ module.exports = (sequelize, DataTypes) => {
     image: {
       type: DataTypes.STRING,
       defaultValue: ''
-  },
+    },
+    title: { type: DataTypes.STRING, allowNull: true },
     discription: { type: DataTypes.TEXT, allowNull: true },
     likes: { type: DataTypes.INTEGER, defaultValue: 0 },
     dislikes: { type: DataTypes.INTEGER, defaultValue: 0 }

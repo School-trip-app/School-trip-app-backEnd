@@ -7,7 +7,7 @@ const path = require('path');
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'ImageMemor')
+        cb(null, 'Images')
     },
     filename: (req, file, cb) => {
         cb(null, Date.now() + path.extname(file.originalname))
@@ -37,6 +37,7 @@ async function addMemory(req, res) {
      const memory = {
         userId:req.body.userId,
         image:req.file.path,
+        title:req.body.title,
         discription:req.body.discription
      }
      const createMemory = await memoriesModel.create(memory);

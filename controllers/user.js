@@ -16,6 +16,8 @@ const storage = multer.diskStorage({
     }
 })
 
+
+
 const upload = multer({
     storage: storage,
     limits: { fileSize: '1000000' },
@@ -33,7 +35,7 @@ const upload = multer({
 
 
 const storage2 = multer.diskStorage({
-    destination: 'Imagefile',
+    destination: 'Images',
     filename: (req, file, cb) => {
         cb(null, Date.now() + path.extname(file.originalname))
     }

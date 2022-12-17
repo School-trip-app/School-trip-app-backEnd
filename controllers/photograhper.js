@@ -54,6 +54,19 @@ const putRate = async (req, res) => {
     }
 }
 
+const deletephotographer = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const photographer = await photographerModel.findOne({ where: { id } });
+        photographer.destroy();
+        res.status(200).send('photographer deleted');
+    }
+    catch (error) {
+        console.log(error);
+    }
+}
+
+
 
 
 
@@ -63,5 +76,6 @@ const putRate = async (req, res) => {
 module.exports = {
     addPhotographer,
     putRate,
-    getAllPhotgraphers
+    getAllPhotgraphers,
+    deletephotographer
 }

@@ -23,6 +23,16 @@ const addPhotographer = async (req, res) => {
 
 }
 
+const getPhotgraphersid = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const photographer = await photographerModel.findOne({ where: { id } });
+        res.status(200).send(photographer);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 const getAllPhotgraphers = async (req, res) => {
     try {
         const allUser = await photographerModel.findAll();
@@ -77,5 +87,6 @@ module.exports = {
     addPhotographer,
     putRate,
     getAllPhotgraphers,
-    deletephotographer
+    deletephotographer,
+    getPhotgraphersid
 }

@@ -5,12 +5,15 @@ const router = require('express').Router();
 const { addPhotographer,
     putRate,
     getAllPhotgraphers,
-    deletephotographer
+    deletephotographer,
+    getPhotgraphersid
 } = require('../controllers/photograhper');
 
 router.put('/photographer/:id', putRate);
 router.post('/photographer', addPhotographer);
 router.get('/photographer', getAllPhotgraphers);
+router.get('/photographer/:id', getPhotgraphersid);
+
 router.delete('/photographer/:id', deletephotographer);
 
 

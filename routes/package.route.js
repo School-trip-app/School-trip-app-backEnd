@@ -18,7 +18,7 @@ router.put('/package/:id', updatePackage);
 router.delete('/package/:id', deletePackage);
 router.put('/package/rate/:id', updateRate);
 
-router.post('/package/order/:userId/:packageId/:photographerId', orderPackage);
+router.post('/package/order/:userId/:packageId', orderPackage);
 router.get('/package/order', getOrders);
 router.get('/package/order/:id', selectOrder);
 

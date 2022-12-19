@@ -1,12 +1,12 @@
 'use strict';
 
 
-const { productModel, UserModel} = require('../models');
+const { productModel, UserModel } = require('../models');
 
 async function addProduct(req, res, next) {
   /*{"name":"STRING", "image":"STRING","price":"STRING","quantity":"STRING","discreption":"STRING","category":"sea"}*/
   try {
-    await  productModel.create(req.body)
+    await productModel.create(req.body)
       .then(resolve => { res.status(201).send(resolve) })
       .catch(reject => { res.status(306).send(reject) });
   } catch (err) {
@@ -24,22 +24,32 @@ async function getProduct(req, res, next) {
   }
 }
 
-async function updateProduct (req, res, next) {
-  try{
-    await productModel.update(req.body,{where: {id : req.params.id}})
-    .then(resolve => { res.status(200).send(resolve) })
-    .catch(reject => { res.status(306).send(reject) });
-  } catch(err){
+async function getProductById(req, res, next) {
+  try {
+    await productModel.findOne({ where: { id: req.params.id } })
+      .then(resolve => { res.status(200).send(resolve) })
+      .catch(reject => { res.status(306).send(reject) });
+  } catch (err) {
+    next(`Error inside getProductById function : ${err}`);
+  }
+}
+
+async function updateProduct(req, res, next) {
+  try {
+    await productModel.update(req.body, { where: { id: req.params.id } })
+      .then(resolve => { res.status(200).send(resolve) })
+      .catch(reject => { res.status(306).send(reject) });
+  } catch (err) {
     next(`Error inside updateProduct function : ${err}`)
   }
 }
 
-function deleteProduct (req, res, next) {
-  try{
-    productModel.destroy({where: {id : req.params.id}})
-    .then(resolve => { res.status(200).send('deleted') })
-    .catch(reject => { res.status(306).send(reject) });
-  } catch(err){
+function deleteProduct(req, res, next) {
+  try {
+    productModel.destroy({ where: { id: req.params.id } })
+      .then(resolve => { res.status(200).send('deleted') })
+      .catch(reject => { res.status(306).send(reject) });
+  } catch (err) {
     next(`Error inside deleteProduct function : ${err}`)
   }
 }
@@ -47,8 +57,9 @@ function deleteProduct (req, res, next) {
 
 
 module.exports = {
-    addProduct,
-    deleteProduct,
-    updateProduct,
-    getProduct
+  addProduct,
+  deleteProduct,
+  updateProduct,
+  getProduct,
+  getProductById
 }

@@ -152,8 +152,7 @@ async function orderPackage(req, res, next) {
         const Order = {
             userId: req.params.userId,
             packageId: req.params.packageId,
-            // productId:req.params.productId,
-            photographerId: req.params.photographerId,
+            photographerId: req.body.photographerId,
             notes: req.body.notes,
             medicalIssues: req.body.medicalIssues,
             specialFood: req.body.specialFood,
@@ -170,7 +169,7 @@ async function orderPackage(req, res, next) {
 
 async function getOrders(req, res, next) {
     try {
-        tripsOrdersModel.findAll({ include: [packageModel, UserModel, photographerModel] })
+        tripsOrdersModel.findAll({ include: [packageModel, UserModel, photographerModel ] })
             .then(resolve => { res.status(201).send(resolve) })
             .catch(reject => { res.status(403).send(`Cannot update : ${reject}`) });
     } catch (err) {

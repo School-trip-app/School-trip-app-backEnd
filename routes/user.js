@@ -9,7 +9,7 @@ const { deleteUser,
     getAllUsers,
     signIN,
     createnewUser,
-    upload, updateImageProfile, upload2} = require('../controllers/user');
+    upload, updateImageProfile, upload2, getuserbyid} = require('../controllers/user');
 
 
 
@@ -22,6 +22,7 @@ router.post('/signin', signIN);
 
 
 router.get('/user', getAllUsers);
+router.get('/user/:id', getuserbyid);
 
 
 router.put('/user/:id', updateCaplities)

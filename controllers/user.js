@@ -177,6 +177,16 @@ const updateImageProfile = async (req, res) => {
     }
 }
 
+const getuserbyid = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const user = await UserModel.findOne({ where: { id } });
+        res.status(200).json(user);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 
 
 module.exports = {
@@ -187,5 +197,6 @@ module.exports = {
     createnewUser,
     upload,
     updateImageProfile,
-    upload2
+    upload2,
+    getuserbyid
 };

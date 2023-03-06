@@ -29,7 +29,7 @@ router.put('/user/:id', updateCaplities)
 
 router.delete('/user/:id', deleteUser)
 
-router.put('/users/:id', bearerAuth,upload2, updateImageProfile);
+router.put('/users/:id',upload, updateImageProfile);
 
 
 

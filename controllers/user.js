@@ -163,13 +163,10 @@ const deleteUser = async (req, res) => {
 const updateImageProfile = async (req, res) => {
     try {
         const id = req.params.id
-        const image = {
-            image:req.file.path
-        } 
-        console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",image);
+        
         const user = await UserModel.findOne({ where: { id } });
         user.update({
-            imageprofile :req.file.path
+            imageprofile :"dd"
         });
         res.status(200).json(user);
     } catch (error) {

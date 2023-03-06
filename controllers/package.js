@@ -9,7 +9,7 @@ const axios = require('axios');
 async function addPackage(req, res, next) {
     try {
         let tripCityName = req.body.city;
-        let weatherApiResponse = await axios.get(`https://api.weatherbit.io/v2.0/forecast/daily?city=${tripCityName}&key=b133dd6b5d344fd48d9d14a2f0821fcb`);
+        let weatherApiResponse = await axios.get(`https://api.weatherbit.io/v2.0/forecast/daily?city=${tripCityName}&key=08cbb381832743ba8178181cb2573ad9`);
         req.body.locationLat = weatherApiResponse.data.lat;
         req.body.locationLon = weatherApiResponse.data.lon;
         const weatherArray = weatherApiResponse.data.data;

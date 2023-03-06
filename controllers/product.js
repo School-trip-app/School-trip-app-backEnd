@@ -6,6 +6,7 @@ const { productModel, UserModel } = require('../models');
 async function addProduct(req, res, next) {
   /*{"name":"STRING", "image":"STRING","price":"STRING","quantity":"STRING","discreption":"STRING","category":"sea"}*/
   try {
+    console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",req.body)
     await productModel.create(req.body)
       .then(resolve => { res.status(201).send(resolve) })
       .catch(reject => { res.status(306).send(reject) });

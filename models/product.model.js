@@ -2,7 +2,7 @@
 
 module.exports=(sequelize, DataTypes)=>{
 
-const productModel=sequelize.define("product", {
+const productModel=sequelize.define("products", {
 			name: { type: DataTypes.STRING, allowNull: false },
 			image: { type: DataTypes.STRING, allowNull: false },
 			price: { type: DataTypes.INTEGER, allowNull: false },

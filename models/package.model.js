@@ -3,7 +3,7 @@
 module.exports = (sequelize, DataTypes) => {
 
 	const packageModel = sequelize.define("package", {
-		packageName: { type: DataTypes.STRING, allowNull: false, unique: true },
+		packageName: { type: DataTypes.STRING, allowNull: false},
 		city: { type: DataTypes.STRING, allowNull: false },
 		locationName: { type: DataTypes.STRING, allowNull: false },
 		locationLat: { type: DataTypes.STRING, allowNull: false },

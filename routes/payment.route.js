@@ -1,6 +1,6 @@
 const router = require("express").Router();
 
-const stripe = require("stripe")('sk_test_51LuDqsLCkHELEFnRiVkqiHMjbHRwPK58VHFhhC7dlwKIqHBPPPKWZLXTl6nwpN3Q4a2qzheCZah25h4PUOHQ13c100kDGcBNhf')
+const stripe = require("stripe")('sk_test_51MaNalGdyr4z0iOx4jCi5kMGaFGjF5GHGcsPw5WqcA5EqkqvBUDXlZvmFACbnRriL9iBR8aANcBjmQI8GUHAjr2100C2cEbngR')
 const cors = require("cors")
 
 

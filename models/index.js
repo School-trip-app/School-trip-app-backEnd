@@ -13,8 +13,20 @@ const sequelizeOption = {
 }
 const POSTGRES_URL = process.env.DATABASE_URL;
 
-let sequelize = new Sequelize(POSTGRES_URL, {sequelizeOption});
+let sequelize = new Sequelize('postgres://hamzah_user:p2Tm8MfwMEuczoMNBE8sH45exEpQlLbF@dpg-cfuhat9gp3jl07eomv30-a.oregon-postgres.render.com/hamzah', {
+	dialect: 'postgres',
+	protocol: 'postgres',
+	dialectOptions: {
+	  ssl: true,
+	  native:true
+	}
+});
 
+// const sequelize = new Sequelize('my_database', 'hamzah', '123456789', {
+// 	host: 'localhost',
+// 	dialect: 'postgres'
+//   });
+  
 const UserModel = require('./user')(sequelize, DataTypes);
 const commentModel = require("./comment.model")(sequelize, DataTypes);
 const memoriesModel = require("./memories.model")(sequelize, DataTypes);
@@ -64,9 +76,9 @@ tripRequestModel.belongsTo(UserModel,{forignKey:'userId', targetKey:'id'});
 
 sequelize.authenticate()
 	.then(() => {
-		console.log('Database connected to postgres');
+		console.log('Database connected to postgres>>>>>>>>>>>>>>>>>>');
 	}).catch((err) => {
-		console.log(err);
+		console.log('Unable to connect to the database:>>>>>>>>>>>>>', err);
 	});
 
 

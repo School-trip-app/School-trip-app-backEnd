@@ -1,6 +1,6 @@
 'use strict';
 
-const { memoriesModel, commentModel, UserModel } = require('../models');
+const { memoriesModel, UserModel } = require('../models');
 const multer = require('multer');
 const path = require('path');
 /* istanbul ignore next */
@@ -33,25 +33,25 @@ const upload = multer({
 /* istanbul ignore next */
 async function addMemory(req, res) {
     //body:{"userId":"integer","imageUrl":"string","discription":"string","likes":"integer","dislikes":"integer"}
-  try {
-     const memory = {
-        userId:req.body.userId,
-        image:req.file.path,
-        title:req.body.title,
-        discription:req.body.discription
-     }
-     const createMemory = await memoriesModel.create(memory);
-     res.status(200).json(createMemory);
-  } catch (error) {
-    console.log(error);
-  }
+    try {
+        const memory = {
+            userId: req.body.userId,
+            image: req.file.path,
+            title: req.body.title,
+            discription: req.body.discription
+        }
+        const createMemory = await memoriesModel.create(memory);
+        res.status(200).json(createMemory);
+    } catch (error) {
+        console.log(error);
+    }
 }
 /* istanbul ignore next */
 
 async function getMemorys(req, res, next) {
     try {
-    const allMemory= await memoriesModel.findAll({ include: [commentModel, UserModel] })
-     res.status(200).send(allMemory);
+        const allMemory = await memoriesModel.findAll({ include: [UserModel] })
+        res.status(200).send(allMemory);
     } catch (err) {
         next(`Error inside getMemorys function : ${err}`);
     }
@@ -66,6 +66,15 @@ async function updateMemory(req, res, next) {
     } catch (err) {
         next(`Error inside updateMemory function : ${err}`);
     }
+}
+
+const updateComments = async (req, res) => {
+    const id = req.params.id;
+    const memeoryId = req.params.id;
+
+    const memeory = await memoriesModel.findOne({ where: { id: memeoryId } })
+    
+
 }
 /* istanbul ignore next */
 
@@ -113,4 +122,4 @@ module.exports = {
     updateDislike,
     updateMemory,
     upload
-}
+} 

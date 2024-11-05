@@ -3,26 +3,44 @@
 const { packageModel, packageWeatherModel, packageImagesModel, tripsOrdersModel, UserModel, photographerModel, hospitalModel, productModel } = require('../models');
 
 const axios = require('axios');
+const Sequelize = require('sequelize');
+const { Op } = Sequelize; // Import the Op operator
 
 
 
+async function  getRatePackage(req,res){
+    const rateNeed=req.body.rate;
+    try {
+        let packagex = await packageModel.findOne({
+          where: {
+            rate: {
+              [Op.gte]: rateNeed, 
+            },
+          },
+        });
+     console.log(packagex);
+     res.status(200).send(packagex);
+      } catch (error) {
+        console.error(error);
+      }
+}
 async function addPackage(req, res, next) {
     try {
         let tripCityName = req.body.city;
-        let weatherApiResponse = await axios.get(`https://api.weatherbit.io/v2.0/forecast/daily?city=${tripCityName}&key=08cbb381832743ba8178181cb2573ad9`);
+        let weatherApiResponse = await axios.get(`https://api.weatherbit.io/v2.0/forecast/daily?city=${tripCityName}&key=d4b28539a2b24563a94b4a3d14d3d37f`);
         req.body.locationLat = weatherApiResponse.data.lat;
         req.body.locationLon = weatherApiResponse.data.lon;
         const weatherArray = weatherApiResponse.data.data;
         let tripDayWeather = weatherArray.find(item => item.valid_date == req.body.tripDate);
         packageModel.create(req.body)
             .then(createdPackage => {
-                const weatherObj = {
+                const weatherObj = {                                                                                                                                                                                                                                                                        
                     packageId: createdPackage.id,
-                    temp: tripDayWeather.temp,
-                    minTemp: tripDayWeather.min_temp,
-                    maxTemp: tripDayWeather.max_temp,
-                    windSpeed: tripDayWeather.wind_spd,
-                    description: tripDayWeather.weather.description,
+                    temp: "",
+                    minTemp: "",
+                    maxTemp: "",
+                    windSpeed: "",
+                    description: "",
                 }
                 packageWeatherModel.create(weatherObj)
                     .then(packageWeather => { })
@@ -69,7 +87,50 @@ async function addPackage(req, res, next) {
         next(`Error inside addPackage function : ${err}`);
     }
 }
-
+async function getMostedBookPackages(req,res){
+try {
+    const numbersOfBook = 5;
+  
+    let packages = await packageModel.findAll({
+      where: {
+        numbersOfBook: {
+          [Op.gt]: numbersOfBook, 
+        },
+      },
+      include: [
+        { model: packageImagesModel },
+        { model: packageWeatherModel },
+        { model: hospitalModel },
+      ],
+    });
+      console.log(packages);
+      res.status(200).send(packages);
+  } catch (error) {
+    console.error(error);
+  }
+}
+async function getlessBookPackages(req,res){
+    try {
+        const numbersOfBook = 5;
+      
+        let packages = await packageModel.findAll({
+          where: {
+            numbersOfBook: {
+              [Op.lt]: numbersOfBook, 
+            },
+          },
+          include: [
+            { model: packageImagesModel },
+            { model: packageWeatherModel },
+            { model: hospitalModel },
+          ],
+        });
+          console.log("LES>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",packages);
+          res.status(200).send(packages);
+      } catch (error) {
+        console.error(error);
+      }
+    }
 function getPackages(req, res, next) {
     try {
         packageModel.findAll({ include: [packageImagesModel, packageWeatherModel, hospitalModel] })
@@ -149,6 +210,12 @@ async function updateRate(req, res, next) {
 
 async function orderPackage(req, res, next) {
     try {
+        let packagex = await packageModel.findOne({ where: { id: req.params.packageId } });
+        packagex.update({
+            numbersOfBook:packagex.numbersOfBook+1
+        });
+
+
         const Order = {
             userId: req.params.userId,
             packageId: req.params.packageId,
@@ -156,7 +223,8 @@ async function orderPackage(req, res, next) {
             notes: req.body.notes,
             medicalIssues: req.body.medicalIssues,
             specialFood: req.body.specialFood,
-            productIds: req.body.productIds
+            productIds: req.body.productIds,
+            totalPric:req.body.totalPric
 
         }
         tripsOrdersModel.create(Order)
@@ -225,5 +293,8 @@ module.exports = {
     deletePackage,
     updatePackage,
     getPackages,
-    addPackage
+    addPackage,
+    getRatePackage,
+    getMostedBookPackages,
+    getlessBookPackages,
 };

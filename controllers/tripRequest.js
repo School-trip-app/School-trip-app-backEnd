@@ -2,15 +2,16 @@
 
 const { tripRequestModel, UserModel } = require('../models');
 
-function addTripRequest(req, res, next) {
+function addTripRequest(req, res) {
   /*body :{"place":"string", "date":"string","numberOfStudents":"integer",
   "contactMethod":"string","otherDetails":"string"}*/
   try {
+    console.log("req.body>>>>>>>>>>>>>>>>>>>",req.body)
     tripRequestModel.create(req.body)
       .then(resolve => { res.status(201).send(resolve) })
       .catch(reject => { res.status(306).send(reject) });
   } catch (err) {
-    next(`Error inside addTripRequest function : ${err}`);
+    console.log("errr>>>>>>",err)
   }
 }
 

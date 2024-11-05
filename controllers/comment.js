@@ -3,62 +3,87 @@
 const { commentModel, memoriesModel, UserModel } = require('../models');
 
 /* istanbul ignore next */
+const multer = require('multer');
+const upload = multer();
 
-async function addComment(req, res, next) {
-    // body:{"userId":"integer","memoryId":"integer","comment":"string"}
-    try {
-        const memoryData = {
-            userId: req.params.userId,
-            memoryId: req.params.memoryId,
-            comment: req.body.comment
-        }
-        const comment = await commentModel.create(memoryData);
-        res.status(200).json(comment);
+const addComment = async (req, res) => {
+  try {
+    // Use multer's middleware to parse form-data
+    upload.none()(req, res, async (err) => {
+      if (err) return res.status(400).json({ message: "Invalid form data" });
 
-    } catch (err) {
-        next(`Error inside addComment function : ${err}`);
-    }
-}
+      const { userId, memoryId, content } = req.body;
+      console.log("req.body:", req.body);
+
+      if (!userId || !memoryId || !content) {
+        return res.status(400).json({ message: "All fields are required" });
+      }
+
+      const newComment = await commentModel.create({
+        userId,
+        memoryId,
+        content,
+      });
+
+      res.status(201).json(newComment);
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Error adding comment", error });
+  }
+};
+
+
 /* istanbul ignore next */
 
-function getMemoryComments(req, res, next) {
-    try {
-        commentModel.findAll({ where: { memoryId: req.params.memoryId }, include: [memoriesModel, UserModel] })
-            .then((resolve) => {
-                res.status(200).send(resolve);
-            })
-            .catch((reject) => { console.log(reject) });
-    } catch (err) {
-        next(`Error inside getMemoryComments function : ${err}`);
-    }
-}
+const getMemoriesWithComments = async (req, res) => {
+  try {
+    const memoriesWithComments = await memoriesModel.findAll({
+      include: [
+        {
+          model: commentModel, include: [
+            {
+              model: UserModel, attributes: ['username'],  // Select fields you want from comments
+            }
+          ]
+        },
+        {
+          model: UserModel, attributes: ['username'],  // Select fields you want from comments
+        },
+      ],
+    });
+    res.status(200).json(memoriesWithComments);
+  } catch (error) {
+    res.status(500).json({ message: "Error retrieving memories with comments", error });
+  }
+};
+
 /* istanbul ignore next */
 
 function updateComment(req, res, next) {
-    try {
-        commentModel.update(req.body, { where: { id: req.params.id } })
-            .then(resolve => { res.status(200).send('updated') })
-            .catch(reject => { console.log(reject) });
-    } catch (err) {
-        next(`Error inside updateComment function : ${err}`);
-    }
+  try {
+    commentModel.update(req.body, { where: { id: req.params.id } })
+      .then(resolve => { res.status(200).send('updated') })
+      .catch(reject => { console.log(reject) });
+  } catch (err) {
+    next(`Error inside updateComment function : ${err}`);
+  }
 }
 /* istanbul ignore next */
 
 function deleteComment(req, res, next) {
-    try {
-        commentModel.destroy({ where: { id: req.params.id } })
-            .then((resolve) => { res.status(202).send('deleted') })
-            .catch((reject) => { console.log(reject) });
-    } catch (err) {
-        next(`Error inside deleteComment function : ${err}`);
-    }
+  try {
+    commentModel.destroy({ where: { id: req.params.id } })
+      .then((resolve) => { res.status(202).send('deleted') })
+      .catch((reject) => { console.log(reject) });
+  } catch (err) {
+    next(`Error inside deleteComment function : ${err}`);
+  }
 }
 
 
 module.exports = {
-    addComment,
-    getMemoryComments,
-    updateComment,
-    deleteComment
+  addComment,
+  getMemoriesWithComments,
+  updateComment,
+  deleteComment
 }

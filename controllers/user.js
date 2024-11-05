@@ -54,12 +54,14 @@ const upload2 = multer({
         }
         cb('Give proper files formate to upload')
     }
-}).single('image')
+}).single('image');
+
+
 const createnewUser = async (req, res) => {
     try {
-        req.body.imageprofile=req.body.gender == "male" ? 'https://i.ibb.co/FDfn81H/male.jpg' : 'https://i.ibb.co/cyQC7J9/female.jpg';
+        req.body.imageprofile = req.body.gender == "male" ? 'https://i.ibb.co/FDfn81H/male.jpg' : 'https://i.ibb.co/cyQC7J9/female.jpg';
         const userInfo = req.body;
-         
+
         let newUser = {}
         if (userInfo.userRole == 'school') {
             newUser = {
@@ -101,7 +103,7 @@ const signIN = async (req, res) => {
         const userInfo = req.headers.authorization.split(' ')[1];
         const decoded = base64.decode(userInfo);
         const [username, password] = decoded.split(':');
-        console.log(username,">>>>>>.", password)
+        console.log(username, ">>>>>>.", password)
         const user = await UserModel.findOne({ where: { username: username } });
         if (user) {
             const checkPassword = await bcrypt.compare(password, user.password);
@@ -110,12 +112,14 @@ const signIN = async (req, res) => {
             }
             else {
                 return res.status(401).json({
-                    message: "you are not allow",
+                    message: "your password or username is not correct",
                 });
             }
         }
         else {
-            return res.status(401).json('your password or username is not correct');
+            return res.status(401).json({
+                message: 'you are not allow'
+            });
         }
 
     }
@@ -133,6 +137,18 @@ const getAllUsers = async (req, res) => {
     }
 }
 
+
+const getUserById = async (req, res) => {
+    const id = req.params.id;
+    try {
+        const user = await UserModel.findOne({ where: { id } });
+        res.status(202).json(user);
+
+    }
+    catch (error) {
+        console.log(error)
+    }
+}
 
 const updateCaplities = async (req, res) => {
     try {
@@ -163,14 +179,20 @@ const deleteUser = async (req, res) => {
 const updateImageProfile = async (req, res) => {
     try {
         const id = req.params.id
-        
+
         const user = await UserModel.findOne({ where: { id } });
-        user.update({
-            imageprofile :"dd"
-        });
+        if(!user){
+            return res.status(404).json({message:"User not found"});
+        }
+
+        user.imageprofile = req.file.path;
+        await user.save();
+
         res.status(200).json(user);
     } catch (error) {
         console.log(error);
+        res.status(500).json({ message: 'Internal server error' });
+
     }
 }
 
@@ -184,5 +206,6 @@ module.exports = {
     createnewUser,
     upload,
     updateImageProfile,
-    upload2
+    upload2,
+    getUserById
 };

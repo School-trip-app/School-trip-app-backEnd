@@ -31,7 +31,7 @@ module.exports = (sequleize, DataTypes) => {
         },
         userRole: {
             type: DataTypes.ENUM('admin', 'school', 'student', 'enabledSchool'),
-            allowNull: false,
+            allowNull: true,
             defaultValue: 'student'
         },
         capabilities: {
@@ -48,7 +48,7 @@ module.exports = (sequleize, DataTypes) => {
         },
         phonenumber: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
         },
         gender: {
             type: DataTypes.ENUM('male', 'female'),

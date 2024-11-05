@@ -5,23 +5,23 @@ module.exports = (sequleize, DataTypes) => {
     const photographerModel = sequleize.define('photographer', {
         image: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
         },
         name: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: true
         },
         email: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
         },
         phoneNumber: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: true
         },
         rate: {
             type: DataTypes.FLOAT,
-            allowNull: null
+            allowNull: true
         },
         numberOfRating: {
             type: DataTypes.INTEGER,
@@ -33,7 +33,7 @@ module.exports = (sequleize, DataTypes) => {
         },
         price: {
             type: DataTypes.INTEGER,
-            allowNull: false
+            allowNull: true
         }
     })
     return photographerModel;

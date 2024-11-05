@@ -3,8 +3,8 @@
 module.exports = (sequelize, DataTypes) => {
   const packageImagesModel =
     sequelize.define("packageImages", {
-      packageId: { type: DataTypes.INTEGER, allowNull: false },
-      imageUrl: { type: DataTypes.STRING, allowNull: false },
+      packageId: { type: DataTypes.INTEGER, allowNull: true },
+      imageUrl: { type: DataTypes.STRING, allowNull: true },
     })
   return packageImagesModel;
 }

@@ -1,12 +1,8 @@
-'use strict';
+const express = require('express');
+const router = express.Router();
+const commentsController = require('../controllers/comment');
 
-const router = require('express').Router();
-
-const { addComment, deleteComment, getMemoryComments, updateComment } = require('../controllers/comment');
-
-router.post('/comment/:userId/:memoryId', addComment);
-router.get('/comment/:memoryId', getMemoryComments);
-router.put('/comment/:id', updateComment);
-router.delete('/comment/:id', deleteComment);
+router.post('/comments', commentsController.addComment);
+router.get('/memories', commentsController.getMemoriesWithComments);
 
 module.exports = router;

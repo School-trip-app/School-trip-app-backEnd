@@ -2,11 +2,11 @@
 
 module.exports = (sequelize, DataTypes) => {
   const packageWeatherModel = sequelize.define("packageWeatherDetails", {
-    packageId: { type: DataTypes.INTEGER, allowNull: false },
-    temp: { type: DataTypes.STRING, allowNull: false },
-    maxTemp: { type: DataTypes.STRING, allowNull: false },
-    minTemp: { type: DataTypes.STRING, allowNull: false },
-    description: { type: DataTypes.STRING, allowNull: false },
+    packageId: { type: DataTypes.INTEGER, allowNull: true },
+    temp: { type: DataTypes.STRING, allowNull: true },
+    maxTemp: { type: DataTypes.STRING, allowNull: true },
+    minTemp: { type: DataTypes.STRING, allowNull: true },
+    description: { type: DataTypes.STRING, allowNull: true },
     windSpeed: { type: DataTypes.STRING },
   })
   return packageWeatherModel;

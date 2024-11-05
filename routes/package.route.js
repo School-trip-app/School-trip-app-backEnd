@@ -9,7 +9,10 @@ const { selectOrder,
   deletePackage,
   updatePackage,
   getPackages,
-  addPackage } = require('../controllers/package');
+  addPackage,
+  getMostedBookPackages,
+  getlessBookPackages,
+  getRatePackage } = require('../controllers/package');
 
 
 router.post('/package', addPackage);
@@ -17,7 +20,9 @@ router.get('/package', getPackages);
 router.put('/package/:id', updatePackage);
 router.delete('/package/:id', deletePackage);
 router.put('/package/rate/:id', updateRate);
-
+router.get('/packageRate', getRatePackage);
+router.get('/packageMosted',getMostedBookPackages)
+router.get('/packageLess',getlessBookPackages)
 router.post('/package/order/:userId/:packageId', orderPackage);
 router.get('/package/order', getOrders);
 router.get('/package/order/:id', selectOrder);

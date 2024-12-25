@@ -1,59 +1,37 @@
 const router = require('express').Router();
-
-
-const bcrypt = require('bcrypt');
-const base64 = require('base-64');
-const { UserModel } = require('../modules/index');
 const { checkUser } = require('../middlewares/userCheck');
+const bearerAuth = require('../middlewares/bearerAuth');
+const { deleteUser, getAllUsers, signIN, createnewUser, upload, updateImageProfile, getUserById } = require('../controllers/user');
+const { UserModel } = require('../models');
+const { broadcastEvent } = require('../websocket');  // Import broadcastEvent from websocket.js
 
-
-const createnewUser = async (req, res) => {
+// Controller function to update capabilities
+const updateCaplities = async (req, res) => {
     try {
-        const userInfo = req.body;
-        const newUser = {
-            username: userInfo.username,
-            email: userInfo.email,
-            password: await bcrypt.hash(userInfo.password, 12),
-            userRole: userInfo.userRole
-        };
-        const user = await UserModel.create(newUser);
-        if (user) res.status(201).json(user);
-    }
-    catch (error) {
+        const id = req.params.id;
+        const user = await UserModel.findOne({ where: { id } });
+        await user.update({ userRole: 'enabledSchool' });
 
+        // Broadcast the update to WebSocket clients
+        broadcastEvent({
+            type: 'ACCOUNT_STATUS_UPDATE',
+            payload: { userId: id, newStatus: 'enabledSchool' }
+        });
+
+        res.status(200).send(user);
+    } catch (error) {
         console.log(error);
-
+        res.status(500).send({ error: 'Failed to update account' });
     }
-}
-router.post('/user', checkUser, createnewUser);
+};
 
-const signIN = async (req, res) => {
-    try {
-
-        const userInfo = req.headers.authorization.split(' ')[1];
-        const decoded = base64.decode(userInfo);
-        const [username, password] = decoded.split(':');
-        const user = await UserModel.findOne({ where: { username: username } });
-        if (user) {
-            const checkPassword = await bcrypt.compare(password, user.password);
-            if (checkPassword) {
-                return res.status(200).json(user);
-            }
-            else {
-                return res.status(401).json({
-                    message: "you are not allow",
-                });
-            }
-        }
-        else {
-            return res.status(401).json('your password or username is not correct');
-        }
-
-    }
-    catch (error) {
-        console.log(error);
-    }
-}
+// Define routes
+router.post('/user', upload, checkUser, createnewUser);
+router.get('/user/:id', getUserById);
 router.post('/signin', signIN);
+router.get('/user', getAllUsers);
+router.put('/user/:id', updateCaplities);  // Update capabilities route
+router.delete('/user/:id', deleteUser);
+router.put('/users/:id', upload, updateImageProfile);
 
 module.exports = router;
